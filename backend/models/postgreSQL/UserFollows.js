@@ -1,15 +1,15 @@
-import { sequelize } from "../config/database";
+import { sequelize } from "../../config/database";
 import { DataTypes } from "sequelize";
 
-const RatingHistory = sequelize.define(
-    "RatingHistory",
+const UserFollows = sequelize.define(
+    "UserFollows",
     {
-        rating_history_id: {
+        user_follows_id: {
             type: DataTypes.UUID,
             primaryKey: true,
             defaultValue: DataTypes.UUIDV4
         },
-        user_id: {
+        follower_id: {
             type: DataTypes.UUID,
             allowNull: false,
             references: {
@@ -17,29 +17,13 @@ const RatingHistory = sequelize.define(
                 key: "user_id"
             }
         },
-        contest_id: {
+        following_id: {
             type: DataTypes.UUID,
             allowNull: false,
             references: {
-                model: "contests",
-                key: "contest_id"
+                model: "users",
+                key: "user_id"
             }
-        },
-        old_rating: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-        new_rating: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-        rank: {
-            type: DataTypes.BIGINT,
-            allowNull: false,
-        },
-        recorded_at: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW
         },
         created_at: {
             type: DataTypes.DATE,
@@ -51,11 +35,11 @@ const RatingHistory = sequelize.define(
         }
     },
     {
-        tableName: "rating_history",
+        tableName: "user_follows",
         timestamps: true,
         createdAt: "created_at",
         updatedAt: "updated_at",
     }
 );
 
-export default RatingHistory;
+export default UserFollows;

@@ -1,15 +1,15 @@
-import { sequelize } from "../config/database";
+import { sequelize } from "../../config/database";
 import { DataTypes } from "sequelize";
 
-const UserFollows = sequelize.define(
-    "UserFollows",
+const CoinsLedger = sequelize.define(
+    "CoinsLedger",
     {
-        user_follows_id: {
+        coins_ledger_id: {
             type: DataTypes.UUID,
             primaryKey: true,
             defaultValue: DataTypes.UUIDV4
         },
-        follower_id: {
+        user_id: {
             type: DataTypes.UUID,
             allowNull: false,
             references: {
@@ -17,12 +17,21 @@ const UserFollows = sequelize.define(
                 key: "user_id"
             }
         },
-        following_id: {
+        amount: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
+        },
+        reason: {
+            type: DataTypes.STRING(255),
+            allowNull: false,
+        },
+        reference_id: {
             type: DataTypes.UUID,
             allowNull: false,
             references: {
-                model: "users",
-                key: "user_id"
+                model: "submissions",
+                key: "submission_id"
             }
         },
         created_at: {
@@ -35,11 +44,11 @@ const UserFollows = sequelize.define(
         }
     },
     {
-        tableName: "user_follows",
+        tableName: "coins_ledgers",
         timestamps: true,
         createdAt: "created_at",
         updatedAt: "updated_at",
     }
 );
 
-export default UserFollows;
+export default CoinsLedger;

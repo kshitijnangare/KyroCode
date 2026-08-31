@@ -1,10 +1,10 @@
-import { sequelize } from "../config/database";
+import { sequelize } from "../../config/database";
 import { DataTypes } from "sequelize";
 
-const CoinsLedger = sequelize.define(
-    "CoinsLedger",
+const RatingHistory = sequelize.define(
+    "RatingHistory",
     {
-        coins_ledger_id: {
+        rating_history_id: {
             type: DataTypes.UUID,
             primaryKey: true,
             defaultValue: DataTypes.UUIDV4
@@ -17,22 +17,29 @@ const CoinsLedger = sequelize.define(
                 key: "user_id"
             }
         },
-        amount: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 0
-        },
-        reason: {
-            type: DataTypes.STRING(255),
-            allowNull: false,
-        },
-        reference_id: {
+        contest_id: {
             type: DataTypes.UUID,
             allowNull: false,
             references: {
-                model: "submissions",
-                key: "submission_id"
+                model: "contests",
+                key: "contest_id"
             }
+        },
+        old_rating: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        new_rating: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        rank: {
+            type: DataTypes.BIGINT,
+            allowNull: false,
+        },
+        recorded_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW
         },
         created_at: {
             type: DataTypes.DATE,
@@ -44,11 +51,11 @@ const CoinsLedger = sequelize.define(
         }
     },
     {
-        tableName: "coins_ledgers",
+        tableName: "rating_history",
         timestamps: true,
         createdAt: "created_at",
         updatedAt: "updated_at",
     }
 );
 
-export default CoinsLedger;
+export default RatingHistory;
