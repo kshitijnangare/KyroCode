@@ -52,16 +52,16 @@ const Problem = sequelize.define(
             defaultValue: 256,
             allowNull: false
         },
-        company_tags: {
-            type: DataTypes.ARRAY(DataTypes.STRING(255)),
-            allowNull: true,
-            defaultValue: []
-        },
-        topic_tags: {
-            type: DataTypes.ARRAY(DataTypes.STRING(255)),
-            allowNull: true,
-            defaultValue: []
-        },
+        // company_tags: {
+        //     type: DataTypes.ARRAY(DataTypes.STRING(255)),
+        //     allowNull: true,
+        //     defaultValue: []
+        // },
+        // topic_tags: {
+        //     type: DataTypes.ARRAY(DataTypes.STRING(255)),
+        //     allowNull: true,
+        //     defaultValue: []
+        // },
         hints: {
             type: DataTypes.ARRAY(DataTypes.TEXT),
             allowNull: true,
