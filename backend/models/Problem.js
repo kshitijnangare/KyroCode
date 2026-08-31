@@ -1,4 +1,3 @@
-import { memo } from "react";
 import { sequelize } from "../config/database";
 import { DataTypes } from "sequelize";
 
@@ -28,7 +27,7 @@ const Problem = sequelize.define(
             allowNull: false
         },
         difficulty: {
-            type: DataTypes.ENUM('Easy','Medium','Hard'),
+            type: DataTypes.ENUM('easy','medium','hard'),
             defaultValue: "easy",
             allowNull: false
         },
@@ -98,3 +97,5 @@ const Problem = sequelize.define(
         updatedAt: "updated_at",
     }
 );
+
+export default Problem;

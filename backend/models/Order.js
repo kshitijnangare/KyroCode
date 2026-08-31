@@ -18,6 +18,10 @@ const Order = sequelize.define(
             }
         }
         // rest of the table columns are yet to be decided.
+    },
+    {
+        tableName: "orders",
+        timestamps: true
     }
 );
 

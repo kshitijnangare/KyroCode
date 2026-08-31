@@ -4,7 +4,7 @@ import { DataTypes } from "sequelize";
 const ProblemCompanyTag = sequelize.define(
     "ProblemCompanyTag",
     {
-        problem_topic_tag_id: {
+        problem_company_tag_id: {
             type: DataTypes.UUID,
             primaryKey: true,
             defaultValue: DataTypes.UUIDV4

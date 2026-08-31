@@ -78,3 +78,5 @@ const Submission = sequelize.define(
         }
     }
 );
+
+export default Submission;
