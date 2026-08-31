@@ -9,7 +9,7 @@ const Sheet = sequelize.define(
             primaryKey: true,
             defaultValue: DataTypes.UUIDV4
         },
-        created_by: {
+        user_id: {
             type: DataTypes.UUID,
             allowNull: false,
             references: {
