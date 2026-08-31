@@ -101,11 +101,6 @@ const User = sequelize.define(
         //     allowNull: true,
         //     defaultValue: []
         // },
-        skills: {
-            type: DataTypes.ARRAY(DataTypes.STRING(255)),
-            allowNull: true,
-            defaultValue: []
-        },
         // submissions: {
         //     type: DataTypes.ARRAY(DataTypes.UUID),
         //     allowNull: true,
@@ -126,6 +121,23 @@ const User = sequelize.define(
         //     allowNull: true,
         //     defaultValue: []
         // },
+        // badges: {
+        //     type: DataTypes.ARRAY(DataTypes.UUID),
+        //     allowNull: true,
+        //     defaultValue: []
+        // },
+        // followers: {
+        //     type: DataTypes.ARRAY(DataTypes.UUID),
+        //     defaultValue: []
+        // },
+        // following: {
+        //     type: DataTypes.ARRAY(DataTypes.UUID),
+        //     defaultValue: []
+        // },
+        // orders: {
+        //     type: DataTypes.ARRAY(DataTypes.UUID),
+        //     defaultValue: []
+        // },
         institute_id: {
             type: DataTypes.UUID,
             allowNull: true,
@@ -134,21 +146,9 @@ const User = sequelize.define(
                 key: "institute_id"
             }
         },
-        // badges: {
-        //     type: DataTypes.ARRAY(DataTypes.UUID),
-        //     allowNull: true,
-        //     defaultValue: []
-        // },
-        followers: {
-            type: DataTypes.ARRAY(DataTypes.UUID),
-            defaultValue: []
-        },
-        following: {
-            type: DataTypes.ARRAY(DataTypes.UUID),
-            defaultValue: []
-        },
-        orders: {
-            type: DataTypes.ARRAY(DataTypes.UUID),
+        skills: {
+            type: DataTypes.ARRAY(DataTypes.STRING(255)),
+            allowNull: true,
             defaultValue: []
         },
         recent_submissions_toggle: {
@@ -178,7 +178,7 @@ const User = sequelize.define(
             type: DataTypes.INTEGER,
             defaultValue: 0
         },
-        coins: {
+        total_coins: {
             type: DataTypes.INTEGER,
             defaultValue: 0
         },
