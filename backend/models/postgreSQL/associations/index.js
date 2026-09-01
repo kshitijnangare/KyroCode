@@ -117,7 +117,8 @@ Contest.belongsToMany(User, { through: ContestParticipant, foreignKey: 'contest_
 User.belongsToMany(Contest, { through: ContestContributor, foreignKey: 'user_id', otherKey: 'contest_id', as: 'contributedContests', });
 Contest.belongsToMany(User, { through: ContestContributor, foreignKey: 'contest_id', otherKey: 'user_id', as: 'contributors', });
 
+User.belongsToMany(Problem, { through: UserSolvedProblem, foreignKey: 'user_id', otherKey: 'problem_id', as: 'solvedProblems' });
+Problem.belongsToMany(User, { through: UserSolvedProblem, foreignKey: 'problem_id', otherKey: 'user_id', as: 'solvedByUsers' });
 
-/* ═══════════════════════════════════════════════
-    USER associations
-═══════════════════════════════════════════════ */
+User.belongsToMany(User, { through: UserFollows, foreignKey: 'follower_id', otherKey: 'following_id', as: 'following' });
+User.belongsToMany(User, { through: UserFollows, foreignKey: 'following_id', otherKey: 'follower_id', as: 'followers' });
