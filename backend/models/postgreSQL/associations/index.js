@@ -49,8 +49,10 @@ const models = {
 
 
 /* ═══════════════════════════════════════════════
-    USER associations
+    ■ USER associations
 ═══════════════════════════════════════════════ */
+
+/* ----- 1 : M Associations ----- */
 
 User.hasMany(UserBadge, { foreignKey: 'user_id', as: 'myBadges', onDelete: 'CASCADE', });
 UserBadge.belongsTo(User, { foreignKey: 'user_id', as: 'user', onDelete: 'CASCADE', });
@@ -102,3 +104,20 @@ User.hasMany(UserFollows, { foreignKey: 'following_id', as: 'followerConnections
 // From a connection row, get the person who followed Kshitij
 UserFollows.belongsTo(User, { foreignKey: 'follower_id', as: 'followedUser', onDelete: 'CASCADE', });
 
+
+
+/* ----- M : N Associations ----- */
+
+User.belongsToMany(Badge, { through: UserBadge, foreignKey: 'user_id', otherKey: 'badge_id', as: 'badgesEarned', });
+Badge.belongsToMany(User, { through: UserBadge, foreignKey: 'badge_id', otherKey: 'user_id', as: 'badgeHolders', });
+
+User.belongsToMany(Contest, { through: ContestParticipant, foreignKey: 'user_id', otherKey: 'contest_id', as: 'participatedContests', });
+Contest.belongsToMany(User, { through: ContestParticipant, foreignKey: 'contest_id', otherKey: 'user_id', as: 'participants', });
+
+User.belongsToMany(Contest, { through: ContestContributor, foreignKey: 'user_id', otherKey: 'contest_id', as: 'contributedContests', });
+Contest.belongsToMany(User, { through: ContestContributor, foreignKey: 'contest_id', otherKey: 'user_id', as: 'contributors', });
+
+
+/* ═══════════════════════════════════════════════
+    USER associations
+═══════════════════════════════════════════════ */
