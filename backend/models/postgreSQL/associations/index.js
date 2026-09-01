@@ -181,3 +181,31 @@ DailyProblem.belongsTo(Problem, { foreignKey: 'problem_id', as: 'problem', });
 
 Problem.belongsToMany(Sheet, { through: SheetProblem, foreignKey: 'problem_id', otherKey: 'sheet_id', as: 'sheets', });
 Sheet.belongsToMany(Problem, {through: SheetProblem, foreignKey: 'sheet_id', otherKey: 'problem_id', as: 'problems', });
+
+/* ═══════════════════════════════════════════════
+    ■ SUBMISSIONS associations
+═══════════════════════════════════════════════ */
+
+Submission.hasMany(CoinsLedger, { foreignKey: 'reference_id', as: 'coins', onDelete: 'CASCADE', });
+CoinsLedger.belongsTo(Submission, { foreignKey: 'reference_id', as: 'submission', onDelete: 'CASCADE', });
+
+/* ═══════════════════════════════════════════════
+    ■ EDUCATION & INSTITUTE associations
+═══════════════════════════════════════════════ */
+
+Institute.hasMany(Education, { foreignKey: 'institute_id', as: 'educations' });
+Education.belongsTo(Institute, { foreignKey: 'institute_id', as: 'institute' });
+
+/* ═══════════════════════════════════════════════
+    ■ SHEETS associations
+═══════════════════════════════════════════════ */
+
+Sheet.hasMany(SheetProblem, { foreignKey: 'sheet_id', as: 'sheetProblems', onDelete: 'CASCADE' });
+SheetProblem.belongsTo(Sheet, { foreignKey: 'sheet_id', as: 'sheet', onDelete: 'CASCADE' });
+
+/* ═══════════════════════════════════════════════
+    ■ BADGES associations
+═══════════════════════════════════════════════ */
+
+Badge.hasMany(UserBadge, { foreignKey: 'badge_id', as: 'userBadges', onDelete: 'CASCADE' });
+UserBadge.belongsTo(Badge, { foreignKey: 'badge_id', as: 'badge', onDelete: 'CASCADE' });
