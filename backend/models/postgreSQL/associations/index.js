@@ -122,3 +122,25 @@ Problem.belongsToMany(User, { through: UserSolvedProblem, foreignKey: 'problem_i
 
 User.belongsToMany(User, { through: UserFollows, foreignKey: 'follower_id', otherKey: 'following_id', as: 'following' });
 User.belongsToMany(User, { through: UserFollows, foreignKey: 'following_id', otherKey: 'follower_id', as: 'followers' });
+
+/* ═══════════════════════════════════════════════
+    ■ CONTESTS associations
+═══════════════════════════════════════════════ */
+
+Contest.hasMany(ContestContributor, { foreignKey: 'contest_id', as: 'contributors', });
+ContestContributor.belongsTo(Contest, { foreignKey: 'contest_id', as: 'contest', });
+
+Contest.hasMany(ContestParticipant, { foreignKey: 'contest_id', as: 'participants', });
+ContestParticipant.belongsTo(Contest, { foreignKey: 'contest_id', as: 'contest', });
+
+Contest.hasMany(ContestProblem, { foreignKey: 'contest_id', as: 'contestProblems', });
+ContestProblem.belongsTo(Contest, { foreignKey: 'contest_id', as: 'contest', });
+
+Contest.hasMany(RatingHistory, { foreignKey: 'contest_id', as: 'ratingHistory', });
+RatingHistory.belongsTo(Contest, { foreignKey: 'contest_id', as: 'contest', });
+
+Contest.hasMany(Submission, { foreignKey: 'contest_id', as: 'submissions', });
+Submission.belongsTo(Contest, { foreignKey: 'contest_id', as: 'contest', });
+
+Contest.belongsToMany(Problem, {through: ContestProblem, foreignKey: 'contest_id', otherKey: 'problem_id', as: 'problems', });
+Problem.belongsToMany(Contest, { through: ContestProblem, foreignKey: 'problem_id', otherKey: 'contest_id', as: 'contests', });
