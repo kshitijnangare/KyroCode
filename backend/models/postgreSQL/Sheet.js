@@ -21,11 +21,11 @@ const Sheet = sequelize.define(
             type: DataTypes.BOOLEAN,
             defaultValue: true
         },
-        problem_ids: {
-            type: DataTypes.ARRAY(DataTypes.UUID),
-            allowNull: true,
-            defaultValue: [],
-        },
+        // problem_ids: {
+        //     type: DataTypes.ARRAY(DataTypes.UUID),
+        //     allowNull: true,
+        //     defaultValue: [],
+        // },
         cover_url: {
             type: DataTypes.TEXT,
             allowNull: true,
