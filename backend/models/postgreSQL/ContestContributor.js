@@ -1,4 +1,4 @@
-import { sequelize } from "../../config/database";
+import { sequelize } from "../../config/postgreSQL.js";
 import { DataTypes, UUID } from "sequelize";
 
 const ContestContributor = sequelize.define(

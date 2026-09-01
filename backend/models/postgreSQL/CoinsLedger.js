@@ -1,4 +1,4 @@
-import { sequelize } from "../../config/database";
+import { sequelize } from "../../config/postgreSQL.js";
 import { DataTypes } from "sequelize";
 
 const CoinsLedger = sequelize.define(

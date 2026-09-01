@@ -1,4 +1,4 @@
-import { sequelize } from '../../../config/database.js';
+import { sequelize } from '../../../config/postgreSQL.js';
 import { DataTypes } from 'sequelize';
 import Badge from '../Badge.js';
 import CoinsLedger from '../CoinsLedger.js';

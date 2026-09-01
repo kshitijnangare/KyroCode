@@ -2,7 +2,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 // import morgan from 'morgan';
-import {connectPostgreSQL} from './config/database.js';
+import {connectPostgreSQL} from './config/postgreSQL.js';
+import { connectRedis } from './config/redis.js';
 // import {connectMongoDB} from './config/MongoDB.js';
 // import { errorMiddleware } from './middlewares/errorMiddleware.js';
 
@@ -14,6 +15,7 @@ const PORT = process.env.PORT || 5000;
 // 2. Database Connection
 // connectMongoDB();
 await connectPostgreSQL();
+await connectRedis();
 
 // 3. Essential Middleware
 app.use(cors());
