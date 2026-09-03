@@ -209,3 +209,6 @@ SheetProblem.belongsTo(Sheet, { foreignKey: 'sheet_id', as: 'sheet', onDelete: '
 
 Badge.hasMany(UserBadge, { foreignKey: 'badge_id', as: 'userBadges', onDelete: 'CASCADE' });
 UserBadge.belongsTo(Badge, { foreignKey: 'badge_id', as: 'badge', onDelete: 'CASCADE' });
+
+export { sequelize };
+export default models; 
