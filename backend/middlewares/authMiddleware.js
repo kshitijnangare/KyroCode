@@ -12,11 +12,15 @@ const normalizeDecodedUser = (decoded) => {
     const idValue = decoded.user_id || decoded.userId || decoded.id;
 
     return {
+        // 1. The Real Data (Snake Case for DB consistency)
         user_id: idValue,
         display_name: decoded.display_name || decoded.displayName || decoded.email,
         username: decoded.username,
         // email: decoded.email,
         role: decoded.role,
+        // 2. Aliases (For compatibility with all controllers)
+        id: idValue,      // For controllers using req.user.id
+        userId: idValue,  // For controllers using req.user.userId
     };
 };
 
@@ -49,7 +53,7 @@ export const authenticateToken = (req, res, next) => {
             req.user = normalizeDecodedUser(decoded);
             next();
         } catch (error) {
-            return res.status(403).json({
+            return res.status(401).json({
                 success: false,
                 message: 'Invalid or expired token.'
             });
@@ -71,7 +75,7 @@ export const isAdmin = (req, res, next) => {
 }
 
 export const isUser = (req, res, next) => {
-    if (!req.user || req.user.role !== 'user') {
+    if (!req.user || (req.user.role !== 'user' && req.user.role !== 'admin')) {
         return res.status(403).json({
             success: false,
             message: 'Access denied. User privileges required.'
