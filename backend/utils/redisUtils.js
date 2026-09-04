@@ -1,5 +1,9 @@
 import { redis } from "../config/redis";
 
+/* ==================================================
+            Authentication & Authorization
+================================================== */
+
 const storeRefreshToken = async (userId, tokenId, hashedToken, ttlSeconds) => {
     try {
         const redisKey = `refresh_token:${userId}:${tokenId}`;
@@ -82,4 +86,44 @@ const hasRefreshToken = async (userId, tokenId) => {
     }
 }
 
-export { storeRefreshToken, getRefreshToken, deleteRefreshToken, revokeAllUserTokens, hasRefreshToken };
+/* ==================================================
+            Email Verification
+================================================== */
+
+const storeEmailVerificationToken = async (userId, tokenId) => {
+    try {
+        const redisKey = `email_verify:${tokenId}`;
+        const redisValue = userId;
+        const redisTtl = 60 * 60;
+
+        const res = await redis.set(redisKey, redisValue, 'EX', redisTtl);
+        return res;
+    } catch (error) {
+        console.error(error, "Some error occured while storing email verification token");
+        throw error;
+    }
+}
+
+const getEmailVerificationToken = async (tokenId) => {
+    try {
+        const redisKey = `email_verify:${tokenId}`;
+        const emailToken = await redis.get(redisKey);
+        return emailToken;
+    } catch (error) {
+        console.error(error, "Cannot retrieve email token");
+        throw error;
+    }
+}
+
+const deleteEmailVerificationToken = async (tokenId) => {
+    try {
+        const redisKey = `email_verify:${tokenId}`;
+        const isDeleted = redis.del([redisKey]);
+        return isDeleted;
+    } catch (error) {
+        console.error(error, "Cannot delete Email token");
+        throw error;
+    }
+}
+
+export { storeRefreshToken, getRefreshToken, deleteRefreshToken, revokeAllUserTokens, hasRefreshToken, storeEmailVerificationToken };

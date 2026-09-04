@@ -17,6 +17,16 @@ const User = sequelize.define(
                 isEmail: true
             }
         },
+        is_email_verified: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+            allowNull: false
+        },
+        email_verified_at:{
+            type: DataTypes.DATE,
+            defaultValue: null,
+            allowNull: true,
+        },
         phone_number: {
             type: DataTypes.STRING(20),
             allowNull: true,
