@@ -90,9 +90,9 @@ const hasRefreshToken = async (userId, tokenId) => {
             Email Verification
 ================================================== */
 
-const storeEmailVerificationToken = async (userId, tokenId) => {
+const storeEmailVerificationToken = async (userId, hashedTokenId) => {
     try {
-        const redisKey = `email_verify:${tokenId}`;
+        const redisKey = `email_verify:${hashedTokenId}`;
         const redisValue = userId;
         const redisTtl = 60 * 60;
 
@@ -126,4 +126,8 @@ const deleteEmailVerificationToken = async (tokenId) => {
     }
 }
 
-export { storeRefreshToken, getRefreshToken, deleteRefreshToken, revokeAllUserTokens, hasRefreshToken, storeEmailVerificationToken };
+/* ==================================================
+            Password Verification
+================================================== */
+
+export { storeRefreshToken, getRefreshToken, deleteRefreshToken, revokeAllUserTokens, hasRefreshToken, storeEmailVerificationToken, getEmailVerificationToken, deleteEmailVerificationToken };

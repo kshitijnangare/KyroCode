@@ -2,9 +2,10 @@ import models from "../../models/postgreSQL/associations";
 import { sequelize } from "../../models/postgreSQL/associations";
 import { registrationValidation, loginValidation } from "../../utils/validators";
 import { hashPassword, verifyPassword } from "../../utils/hashUtils";
-import { Op, where } from "sequelize";
+import { DATE, NOW, Op, where } from "sequelize";
 import { generateAccessToken, verifyAccessToken, generateRefreshToken, verifyRefreshToken, hashToken } from "../../utils/tokenUtils";
-import { storeRefreshToken, getRefreshToken, deleteRefreshToken, revokeAllUserTokens, hasRefreshToken } from "../../utils/redisUtils";
+import { storeRefreshToken, getRefreshToken, deleteRefreshToken, revokeAllUserTokens, hasRefreshToken, getEmailVerificationToken, deleteEmailVerificationToken, storeEmailVerificationToken } from "../../utils/redisUtils";
+import { sendVerificationEmail } from "../../services/verificationEmailService";
 
 const { User } = models;
 
@@ -43,12 +44,24 @@ export const register = async (req, res, next) => {
             },
         });
 
-        if (exisitngUser) {
+        if (exisitngUser && exisitngUser.is_email_verified === true) {
             const conflictField = exisitngUser.email === email ? "Email" : "Phone Number";
             return res.status(409).json({
                 success: false,
                 message: `User with this ${conflictField} already exists`,
             });
+        }
+
+        // now if there is a exisitingUser means he has not verified his email. 
+        // so just tell them to verify. if new password is provided it will not be updated. Old password stays. username also stays old
+        // if they want to update they can update later by going in to the profile.
+        if (exisitngUser && exisitngUser.is_email_verified === false) {
+            // await exisitngUser.destroy();
+            return res.status(200).json({
+                success: true,
+                message: "Account exists but was unverified. We have sent a new verification link to your email. Verify and then login again"
+            });
+
         }
 
         const existingUsername = await User.findOne({
@@ -76,6 +89,16 @@ export const register = async (req, res, next) => {
             role: role || 'user',
             birthdate: birthdate || null,
         });
+
+        // Generate raw verification token and hash it for Redis
+        const rawToken = crypto.randomUUID();
+        const hashedToken = hashToken(rawToken);
+
+        // Store token in Redis (1-hour expiration = 3600 seconds)
+        await storeEmailVerificationToken(user.user_id, hashedToken);
+
+        // sending verification mail
+        await sendVerificationEmail(user.email, user.display_name, rawToken);
 
         const userResponse = user.toJSON();
         delete userResponse.password_hash;
@@ -120,6 +143,14 @@ export const login = async (req, res, next) => {
             return res.status(401).json({
                 success: false,
                 message: `User with ${searchCondition} does not exists`
+            });
+        }
+
+        const is_email_verified = user.is_email_verified;
+        if (!is_email_verified) {
+            return res.status(403).json({
+                "success": false,
+                "message": "Your email is not verified. Please check your inbox or request a new verification link."
             });
         }
 
@@ -290,10 +321,10 @@ export const logoutOfAllDevices = async (req, res, next) => {
     try {
         const refreshToken = req.cookies?.refreshToken || req.headers?.authorization?.replace("Bearer ", "");
 
-        if(refreshToken){
+        if (refreshToken) {
             try {
                 const decoded = verifyRefreshToken(refreshToken);
-                const { userId, tokenId, familyId } =decoded;
+                const { userId, tokenId, familyId } = decoded;
                 await revokeAllUserTokens(userId);
             } catch (error) {
                 console.log(error, "Error occurred because user might be logged out already");
@@ -305,6 +336,54 @@ export const logoutOfAllDevices = async (req, res, next) => {
             success: true,
             message: "Logout Successful"
         });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const verifyEmail = async (req, res, next) => {
+    try {
+        const tokenId = req.query.tokenId;
+
+        const hashed_token = hashToken(tokenId);
+        const userId = await getEmailVerificationToken(hashed_token);
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid or expired verification link",
+            });
+        }
+
+        const exisitngUser = await User.findOne({
+            where: {
+                user_id: userId
+            },
+        });
+
+        if (!exisitngUser) {
+            return res.status(409).json({
+                success: false,
+                message: `User Does not Exists`,
+            });
+        }
+
+        exisitngUser.is_email_verified = true;
+        exisitngUser.email_verified_at = NOW();
+        await exisitngUser.save();
+
+        const isDeleted = await deleteEmailVerificationToken(hashed_token);
+        if (!isDeleted) {
+            return res.status(400).json({
+                success: false,
+                message: `User Email Verified but token not deleted`,
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Email verified successfully"
+        });
+
     } catch (error) {
         next(error);
     }
