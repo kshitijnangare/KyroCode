@@ -20,3 +20,8 @@ export const loginValidation = Joi.object({
     phone_number: Joi.string().min(10).max(20).optional(),
     password: Joi.string().min(6).required(),
 }).xor('email', 'phone_number');
+
+export const resetPasswordValidation = Joi.object({
+    password: Joi.string().min(6).required(), 
+    token: Joi.string().required(),
+});

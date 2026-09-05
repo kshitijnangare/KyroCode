@@ -1,11 +1,12 @@
 import models from "../../models/postgreSQL/associations";
 import { sequelize } from "../../models/postgreSQL/associations";
-import { registrationValidation, loginValidation } from "../../utils/validators";
+import { registrationValidation, loginValidation, resetPasswordValidation } from "../../utils/validators";
 import { hashPassword, verifyPassword } from "../../utils/hashUtils";
 import { DATE, NOW, Op, where } from "sequelize";
 import { generateAccessToken, verifyAccessToken, generateRefreshToken, verifyRefreshToken, hashToken } from "../../utils/tokenUtils";
-import { storeRefreshToken, getRefreshToken, deleteRefreshToken, revokeAllUserTokens, hasRefreshToken, getEmailVerificationToken, deleteEmailVerificationToken, storeEmailVerificationToken, getResendEmailCooldown } from "../../utils/redisUtils";
+import { storeRefreshToken, getRefreshToken, deleteRefreshToken, revokeAllUserTokens, hasRefreshToken, getEmailVerificationToken, deleteEmailVerificationToken, storeEmailVerificationToken, getResendEmailCooldown, storeResetPasswordToken, getResetPasswordToken, deleteResetPasswordToken } from "../../utils/redisUtils";
 import { sendVerificationEmail } from "../../services/verificationEmailService";
+import { sendResetPasswordEmail } from "../../services/resetPasswordEmailService";
 
 const { User } = models;
 
@@ -57,6 +58,13 @@ export const register = async (req, res, next) => {
         // if they want to update they can update later by going in to the profile.
         if (existingUser && existingUser.is_email_verified === false) {
             // await existingUser.destroy();
+            const { error } = resetPasswordValidation.valid(password);
+            if (error) {
+                return res.status(400).json({
+                    success: false,
+                    message: error.details[0].message,
+                });
+            }
             existingUser.password_hash = await hashPassword(password);
             if (display_name) {
                 existingUser.display_name = display_name;
@@ -363,16 +371,16 @@ export const logoutOfAllDevices = async (req, res, next) => {
 
 export const verifyEmail = async (req, res, next) => {
     try {
-        const tokenId = req.query.tokenId;
+        const token = req.query.token;
 
-        if (!tokenId) {
+        if (!token) {
             return res.status(400).json({
                 success: false,
                 message: "Verification token is required",
             });
         }
 
-        const hashed_token = hashToken(tokenId);
+        const hashed_token = hashToken(token);
         const userId = await getEmailVerificationToken(hashed_token);
         if (!userId) {
             return res.status(400).json({
@@ -407,9 +415,18 @@ export const verifyEmail = async (req, res, next) => {
         // }
 
         // Cleanup token asynchronously (don't block/fail response if Redis cleanup fails)
-        deleteEmailVerificationToken(hashed_token).catch((error) =>
-            console.error("Failed to delete Redis verification token:", error)
-        );
+        
+        // option 1:
+        // deleteEmailVerificationToken(hashed_token).catch((error) =>
+        //     console.error("Failed to delete Redis verification token:", error)
+        // );
+        
+        //option 2:
+        try {
+            await deleteEmailVerificationToken(hashed_token);
+        } catch (error) {
+            console.error("Failed to delete Redis Verification token:", error);
+        }
 
         return res.status(200).json({
             success: true,
@@ -471,7 +488,170 @@ export const resendEmail = async (req, res, next) => {
         // sending verification mail
         await sendVerificationEmail(user.email, user.display_name, rawToken);
 
-    } catch (error) {
+        return res.status(200).json({
+            success: true,
+            message: "Email Verification Mail Resend",
+        });
 
+    } catch (error) {
+        next(error);
     }
 }
+
+export const forgotPassword = async (req, res, next) => {
+    try {
+        const { email } = req.body;
+        if (!email) {
+            return res.status(400).json({
+                success: false,
+                message: "Email Required"
+            });
+        }
+
+        const user = await User.findOne({
+            where: {
+                email: email,
+            }
+        });
+
+        if (!user) {
+            return res.status(401).json({
+                success: false,
+                message: "User With this Email does not exists. Come with your original email"
+            });
+        }
+
+        const rawToken = crypto.randomUUID();
+        const hashed_token = hashToken(rawToken);
+
+        // store token in redis (1 hour expiration = 3600 seconds)
+        await storeResetPasswordToken(user.user_id, hashed_token);
+
+        // send reset password mail
+        await sendResetPasswordEmail(user.email, user.display_name, rawToken);
+
+        return res.status(200).json({
+            success: true,
+            message: "Reset Password Mail Resend",
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const resetPassword = async (req, res, next) => {
+    try {
+        const { error, value } = resetPasswordValidation.validate(req.body);
+        if (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.details[0].message,
+            });
+        }
+
+        const { password, token } = value;
+
+        if (!token) {
+            return res.status(400).json({
+                success: false,
+                message: "Verification token is required",
+            });
+        }
+
+        const hashed_token = hashToken(token);
+        const userId = await getResetPasswordToken(hashed_token);
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid or expired verification link",
+            });
+        }
+
+        const existingUser = await User.findOne({
+            where: {
+                user_id: userId
+            },
+        });
+
+        if (!existingUser) {
+            return res.status(409).json({
+                success: false,
+                message: `User Does not Exists`,
+            });
+        }
+
+
+        const hash_password = await hashPassword(password);
+        existingUser.password_hash = hash_password;
+        await existingUser.save();
+
+        // or you can use
+        // User.update({ password_hash }, { where: { user_id: userId } })).
+
+        // Cleanup token asynchronously (don't block/fail response if Redis cleanup fails)
+        try {
+            await deleteResetPasswordToken(hashed_token);
+        } catch (error) {
+            console.error("Failed to delete Redis reset password token:", error);
+        }
+
+        // once password is changed log out of all devices
+        await revokeAllUserTokens(userId);
+
+        return res.status(200).json({
+            success: true,
+            message: "Password Reset Successful",
+        });
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+// export const verifyResetPassword = async (req, res, next) => {
+//     try {
+//         const token = req.query.token;
+
+//         if (!token) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Verification token is required",
+//             });
+//         }
+
+//         const hashed_token = hashToken(token);
+//         const userId = await getResetPasswordToken(hashed_token);
+//         if (!userId) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Invalid or expired verification link",
+//             });
+//         }
+
+//         const existingUser = await User.findOne({
+//             where: {
+//                 user_id: userId
+//             },
+//         });
+
+//         if (!existingUser) {
+//             return res.status(409).json({
+//                 success: false,
+//                 message: `User Does not Exists`,
+//             });
+//         }
+
+//         // Cleanup token asynchronously (don't block/fail response if Redis cleanup fails)
+//         deleteResetPasswordToken(hashed_token).catch((error) =>
+//             console.error("Failed to delete Redis reset password token:", error)
+//         );
+
+//         return res.status(200).json({
+//             success: true,
+//             message: "Reset password token verified successfully! You can now Reset Password in."
+//         });
+//     } catch (error) {
+
+//     }
+// }

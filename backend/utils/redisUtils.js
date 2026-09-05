@@ -163,8 +163,44 @@ const deleteResendEmailCooldown = async (userId) => {
 }
 
 /* ==================================================
-            Password Verification
+            Reset Password
 ================================================== */
+
+const storeResetPasswordToken = async (userId, hashedTokenId) => {
+    try {
+        const redisKey = `reset_password:${hashedTokenId}`;
+        const redisValue = userId;
+        const redisTtl = 60 * 60;
+
+        const res = await redis.set(redisKey, redisValue, 'EX', redisTtl);
+        return res;
+    } catch (error) {
+        console.error(error, "Some error occured while storing email verification token");
+        throw error;
+    }
+}
+
+const getResetPasswordToken = async (tokenId) => {
+    try {
+        const redisKey = `reset_password:${tokenId}`;
+        const emailToken = await redis.get(redisKey);
+        return emailToken;
+    } catch (error) {
+        console.error(error, "Cannot retrieve email token");
+        throw error;
+    }
+}
+
+const deleteResetPasswordToken = async (tokenId) => {
+    try {
+        const redisKey = `reset_password:${tokenId}`;
+        const isDeleted = await redis.del([redisKey]);
+        return isDeleted;
+    } catch (error) {
+        console.error(error, "Cannot delete Email token");
+        throw error;
+    }
+}
 
 export {
     storeRefreshToken,
@@ -178,4 +214,7 @@ export {
     storeResendEmailCooldown,
     getResendEmailCooldown,
     deleteResendEmailCooldown,
+    storeResetPasswordToken,
+    getResetPasswordToken,
+    deleteResetPasswordToken,
 };
