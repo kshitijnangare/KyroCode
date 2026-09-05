@@ -126,8 +126,56 @@ const deleteEmailVerificationToken = async (tokenId) => {
     }
 }
 
+const storeResendEmailCooldown = async (userId) => {
+    try {
+        const redisKey = `email_resend_cooldown:${userId}`;
+        const redisValue = `${userId}`;
+        const redisTtl = 60 * 2; // cooldown time
+
+        const res = await redis.set(redisKey, redisValue, 'EX', redisTtl);
+        return res;
+    } catch (error) {
+        console.error(error, "Some error occured while storing email verification cooldown");
+        throw error;
+    }
+}
+
+const getResendEmailCooldown = async (userId) => {
+    try {
+        const redisKey = `email_resend_cooldown:${userId}`;
+        const emailToken = await redis.get(redisKey);
+        return emailToken;
+    } catch (error) {
+        console.error(error, "Cannot retrieve email token");
+        throw error;
+    }
+}
+
+const deleteResendEmailCooldown = async (userId) => {
+    try {
+        const redisKey = `email_resend_cooldown:${userId}`;
+        const isDeleted = await redis.del([redisKey]);
+        return isDeleted;
+    } catch (error) {
+        console.error(error, "Cannot delete Email token");
+        throw error;
+    }
+}
+
 /* ==================================================
             Password Verification
 ================================================== */
 
-export { storeRefreshToken, getRefreshToken, deleteRefreshToken, revokeAllUserTokens, hasRefreshToken, storeEmailVerificationToken, getEmailVerificationToken, deleteEmailVerificationToken };
+export {
+    storeRefreshToken,
+    getRefreshToken,
+    deleteRefreshToken,
+    revokeAllUserTokens,
+    hasRefreshToken,
+    storeEmailVerificationToken,
+    getEmailVerificationToken,
+    deleteEmailVerificationToken,
+    storeResendEmailCooldown,
+    getResendEmailCooldown,
+    deleteResendEmailCooldown,
+};
