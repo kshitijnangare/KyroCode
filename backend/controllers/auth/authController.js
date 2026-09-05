@@ -38,14 +38,14 @@ export const register = async (req, res, next) => {
 
         const { email, phone_number, display_name, username, password, gender, role, birthdate } = req.body;
 
-        const exisitngUser = await User.findOne({
+        const existingUser = await User.findOne({
             where: {
                 [Op.or]: [{ email: email }, { phone_number: phone_number }],
             },
         });
 
-        if (exisitngUser && exisitngUser.is_email_verified === true) {
-            const conflictField = exisitngUser.email === email ? "Email" : "Phone Number";
+        if (existingUser && existingUser.is_email_verified === true) {
+            const conflictField = existingUser.email === email ? "Email" : "Phone Number";
             return res.status(409).json({
                 success: false,
                 message: `User with this ${conflictField} already exists`,
@@ -55,8 +55,24 @@ export const register = async (req, res, next) => {
         // now if there is a exisitingUser means he has not verified his email. 
         // so just tell them to verify. if new password is provided it will not be updated. Old password stays. username also stays old
         // if they want to update they can update later by going in to the profile.
-        if (exisitngUser && exisitngUser.is_email_verified === false) {
-            // await exisitngUser.destroy();
+        if (existingUser && existingUser.is_email_verified === false) {
+            // await existingUser.destroy();
+            existingUser.password_hash = await hashPassword(password);
+            if (display_name) {
+                existingUser.display_name = display_name;
+            }
+            await existingUser.save();
+
+            // Generate raw verification token and hash it for Redis
+            const rawToken = crypto.randomUUID();
+            const hashedToken = hashToken(rawToken);
+
+            // Store token in Redis (1-hour expiration = 3600 seconds)
+            await storeEmailVerificationToken(user.user_id, hashedToken);
+
+            // sending verification mail
+            await sendVerificationEmail(user.email, user.display_name, rawToken);
+
             return res.status(200).json({
                 success: true,
                 message: "Account exists but was unverified. We have sent a new verification link to your email. Verify and then login again"
@@ -345,6 +361,13 @@ export const verifyEmail = async (req, res, next) => {
     try {
         const tokenId = req.query.tokenId;
 
+        if (!tokenId) {
+            return res.status(400).json({
+                success: false,
+                message: "Verification token is required",
+            });
+        }
+
         const hashed_token = hashToken(tokenId);
         const userId = await getEmailVerificationToken(hashed_token);
         if (!userId) {
@@ -354,34 +377,39 @@ export const verifyEmail = async (req, res, next) => {
             });
         }
 
-        const exisitngUser = await User.findOne({
+        const existingUser = await User.findOne({
             where: {
                 user_id: userId
             },
         });
 
-        if (!exisitngUser) {
+        if (!existingUser) {
             return res.status(409).json({
                 success: false,
                 message: `User Does not Exists`,
             });
         }
 
-        exisitngUser.is_email_verified = true;
-        exisitngUser.email_verified_at = NOW();
-        await exisitngUser.save();
+        existingUser.is_email_verified = true;
+        existingUser.email_verified_at = new Date();
+        await existingUser.save();
 
-        const isDeleted = await deleteEmailVerificationToken(hashed_token);
-        if (!isDeleted) {
-            return res.status(400).json({
-                success: false,
-                message: `User Email Verified but token not deleted`,
-            });
-        }
+        // const isDeleted = await deleteEmailVerificationToken(hashed_token);
+        // if (!isDeleted) {
+        //     return res.status(400).json({
+        //         success: false,
+        //         message: `User Email Verified but token not deleted`,
+        //     });
+        // }
+
+        // Cleanup token asynchronously (don't block/fail response if Redis cleanup fails)
+        deleteEmailVerificationToken(hashed_token).catch((error) =>
+            console.error("Failed to delete Redis verification token:", error)
+        );
 
         return res.status(200).json({
             success: true,
-            message: "Email verified successfully"
+            message: "Email verified successfully! You can now log in."
         });
 
     } catch (error) {

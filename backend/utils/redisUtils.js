@@ -118,7 +118,7 @@ const getEmailVerificationToken = async (tokenId) => {
 const deleteEmailVerificationToken = async (tokenId) => {
     try {
         const redisKey = `email_verify:${tokenId}`;
-        const isDeleted = redis.del([redisKey]);
+        const isDeleted = await redis.del([redisKey]);
         return isDeleted;
     } catch (error) {
         console.error(error, "Cannot delete Email token");
