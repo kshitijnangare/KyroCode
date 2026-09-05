@@ -21,10 +21,13 @@ const COOKIE_OPTIONS = {
 };
 
 /**
- * Registeration Route 
- * @param {string} password - Plain text password to hash.
- * @returns {Promise<string>} The generated Argon2id hash.
- * POST /api/v1/auth/register
+ * @desc      Register a new user account or resend verification for unverified accounts
+ * @route     POST /api/v1/auth/register
+ * @access    Public
+ * @param     {Object} req - Express request object containing registration details in body
+ * @param     {Object} res - Express response object
+ * @param     {Function} next - Express next middleware function
+ * @returns   {Promise<Response>} 201 Created on success, 200 OK if unverified email resend, or error status
  */
 
 export const register = async (req, res, next) => {
@@ -143,10 +146,13 @@ export const register = async (req, res, next) => {
 }
 
 /**
- * Login Route 
- * @param {string} password - Plain text password to hash.
- * @returns {Promise<string>} The generated Argon2id hash.
- * POST /api/v1/auth/register
+ * @desc      Authenticate user with credentials & issue JWT tokens (Access + HttpOnly Refresh Cookie)
+ * @route     POST /api/v1/auth/login
+ * @access    Public
+ * @param     {Object} req - Express request object containing email/phone_number and password
+ * @param     {Object} res - Express response object
+ * @param     {Function} next - Express next middleware function
+ * @returns   {Promise<Response>} 200 OK with Access Token & set Refresh Cookie, or 401/403 status
  */
 
 export const login = async (req, res, next) => {
@@ -234,6 +240,16 @@ export const login = async (req, res, next) => {
     }
 }
 
+/**
+ * @desc      Refresh expired access token using rotating refresh token strategy
+ * @route     POST /api/v1/auth/refresh
+ * @access    Public (Requires valid Refresh Token in Cookie or Authorization header)
+ * @param     {Object} req - Express request object containing refresh token
+ * @param     {Object} res - Express response object
+ * @param     {Function} next - Express next middleware function
+ * @returns   {Promise<Response>} 200 OK with new Access Token & new Refresh Cookie, or 401/403 status
+ */
+
 export const refresh = async (req, res, next) => {
     try {
         // here I need to divide the task into following steps
@@ -318,6 +334,16 @@ export const refresh = async (req, res, next) => {
 
 }
 
+/**
+ * @desc      Logout user from current device by clearing refresh token from Redis & Cookies
+ * @route     POST /api/v1/auth/logout
+ * @access    Private
+ * @param     {Object} req - Express request object containing refresh token
+ * @param     {Object} res - Express response object
+ * @param     {Function} next - Express next middleware function
+ * @returns   {Promise<Response>} 200 OK on successful logout
+ */
+
 export const logout = async (req, res, next) => {
     try {
         const refreshToken = req.cookies?.refreshToken || req.headers.authorization?.replace("Bearer ", "");
@@ -344,6 +370,15 @@ export const logout = async (req, res, next) => {
     }
 }
 
+/**
+ * @desc      Revoke all active sessions and refresh tokens for the user across all devices
+ * @route     POST /api/v1/auth/logout-all
+ * @access    Private
+ * @param     {Object} req - Express request object containing user session data
+ * @param     {Object} res - Express response object
+ * @param     {Function} next - Express next middleware function
+ * @returns   {Promise<Response>} 200 OK on successful global logout
+ */
 
 export const logoutOfAllDevices = async (req, res, next) => {
     try {
@@ -368,6 +403,16 @@ export const logoutOfAllDevices = async (req, res, next) => {
         next(error);
     }
 }
+
+/**
+ * @desc      Verify user's email address using the token sent via email
+ * @route     GET /api/v1/auth/verify-email
+ * @access    Public
+ * @param     {Object} req - Express request object containing verification `token` in query params
+ * @param     {Object} res - Express response object
+ * @param     {Function} next - Express next middleware function
+ * @returns   {Promise<Response>} 200 OK on successful email verification, or 400/409 status
+ */
 
 export const verifyEmail = async (req, res, next) => {
     try {
@@ -438,6 +483,16 @@ export const verifyEmail = async (req, res, next) => {
     }
 }
 
+/**
+ * @desc      Resend email verification link to unverified user (with rate-limiting cooldown)
+ * @route     POST /api/v1/auth/resend-email
+ * @access    Public
+ * @param     {Object} req - Express request object containing email in body
+ * @param     {Object} res - Express response object
+ * @param     {Function} next - Express next middleware function
+ * @returns   {Promise<Response>} 200 OK when email is queued/sent, or 400/401 status
+ */
+
 export const resendEmail = async (req, res, next) => {
     try {
         const email = req.body;
@@ -498,6 +553,16 @@ export const resendEmail = async (req, res, next) => {
     }
 }
 
+/**
+ * @desc      Initiate password reset flow by sending a reset link to registered email
+ * @route     POST /api/v1/auth/forgot-password
+ * @access    Public
+ * @param     {Object} req - Express request object containing email in body
+ * @param     {Object} res - Express response object
+ * @param     {Function} next - Express next middleware function
+ * @returns   {Promise<Response>} 200 OK when reset link is generated and sent
+ */
+
 export const forgotPassword = async (req, res, next) => {
     try {
         const { email } = req.body;
@@ -539,6 +604,16 @@ export const forgotPassword = async (req, res, next) => {
         next(error);
     }
 }
+
+/**
+ * @desc      Reset user password using token received in email & revoke all existing user sessions
+ * @route     POST /api/v1/auth/reset-password
+ * @access    Public
+ * @param     {Object} req - Express request object containing token and new password in body
+ * @param     {Object} res - Express response object
+ * @param     {Function} next - Express next middleware function
+ * @returns   {Promise<Response>} 200 OK on successful password update, or 400/409 status
+ */
 
 export const resetPassword = async (req, res, next) => {
     try {
