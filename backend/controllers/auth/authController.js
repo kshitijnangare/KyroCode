@@ -4,7 +4,7 @@ import { registrationValidation, loginValidation } from "../../utils/validators"
 import { hashPassword, verifyPassword } from "../../utils/hashUtils";
 import { DATE, NOW, Op, where } from "sequelize";
 import { generateAccessToken, verifyAccessToken, generateRefreshToken, verifyRefreshToken, hashToken } from "../../utils/tokenUtils";
-import { storeRefreshToken, getRefreshToken, deleteRefreshToken, revokeAllUserTokens, hasRefreshToken, getEmailVerificationToken, deleteEmailVerificationToken, storeEmailVerificationToken } from "../../utils/redisUtils";
+import { storeRefreshToken, getRefreshToken, deleteRefreshToken, revokeAllUserTokens, hasRefreshToken, getEmailVerificationToken, deleteEmailVerificationToken, storeEmailVerificationToken, getResendEmailCooldown } from "../../utils/redisUtils";
 import { sendVerificationEmail } from "../../services/verificationEmailService";
 
 const { User } = models;
@@ -69,6 +69,8 @@ export const register = async (req, res, next) => {
 
             // Store token in Redis (1-hour expiration = 3600 seconds)
             await storeEmailVerificationToken(user.user_id, hashedToken);
+            // store email cool down in redis with 2 min expiration
+            await storeEmailVerificationToken(user.user_id);
 
             // sending verification mail
             await sendVerificationEmail(user.email, user.display_name, rawToken);
@@ -112,6 +114,8 @@ export const register = async (req, res, next) => {
 
         // Store token in Redis (1-hour expiration = 3600 seconds)
         await storeEmailVerificationToken(user.user_id, hashedToken);
+        // store email cool down in redis with 2 min expiration
+        await storeEmailVerificationToken(user.user_id);
 
         // sending verification mail
         await sendVerificationEmail(user.email, user.display_name, rawToken);
@@ -414,5 +418,60 @@ export const verifyEmail = async (req, res, next) => {
 
     } catch (error) {
         next(error);
+    }
+}
+
+export const resendEmail = async (req, res, next) => {
+    try {
+        const email = req.body;
+        if (!email) {
+            return res.status(400).json({
+                success: false,
+                message: "Email Required"
+            });
+        }
+
+        const user = User.findOne({
+            where: {
+                email: email,
+            }
+        });
+
+        if (!user) {
+            return res.status(401).json({
+                success: false,
+                message: "User With this Email does not exists. Come with your original email"
+            });
+        }
+
+        if (user.is_email_verified === true) {
+            return res.status(401).json({
+                success: false,
+                message: "Email is Already verified. You can directly Log in"
+            });
+        }
+
+        const cooldown = getResendEmailCooldown(user.user_id);
+        if (cooldown) {
+            return res.status(400).json({
+                success: false,
+                message: "Wait for 2 minutes to resend verification email"
+            });
+        }
+
+        // Generate raw verification token and hash it for Redis
+        const rawToken = crypto.randomUUID();
+        const hashedToken = hashToken(rawToken);
+
+        // Store token in Redis (1-hour expiration = 3600 seconds)
+        await storeEmailVerificationToken(user.user_id, hashedToken);
+        // store email cool down in redis with 2 min expiration
+        await storeEmailVerificationToken(user.user_id);
+
+        // sending verification mail
+        await sendVerificationEmail(user.email, user.display_name, rawToken);
+
+    } catch (error) {
+
     }
 }
