@@ -3,32 +3,32 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const FAQS = [
   {
-    q: 'Is KyroCode really free to start?',
-    a: 'Yes. The free plan gives you access to 500+ problems, contest participation, a public profile with heatmap, and our core editor. No credit card required. Upgrade to Pro when you want the full arsenal.',
+    q: 'Is KyroCode genuinely free to use for practice?',
+    a: 'Yes. The Community plan gives full access to 500+ algorithmic problems, real-time Docker sandboxed execution, rated weekly contests, and public profile heatmaps. No credit card or trial period required.',
   },
   {
-    q: 'How is the code execution engine different from LeetCode?',
-    a: "We self-host Judge0 on our own servers. This means no rate limits from a third-party API, real Docker sandboxing, and you can submit as many times as you want. We don't pay per-execution — you don't get throttled during contests.",
+    q: 'How does self-hosted Judge0 execution work under the hood?',
+    a: "Unlike platforms relying on throttled third-party APIs, we deploy Judge0 on dedicated Linux clusters with isolated ephemeral Docker sandboxes. Submissions are protected by strict cgroup resource constraints and real-time process limits.",
   },
   {
-    q: 'What are "Real-World Problems"?',
-    a: 'A unique category where you solve production engineering scenarios — mock flaky API retries, parsing dirty data pipelines, handling race conditions with shared state. Problems that test if you can write production-grade code, not just recite patterns.',
+    q: 'What distinguishes "Real-World Problems" from typical DSA puzzles?',
+    a: 'Typical DSA focuses on isolated algorithms. Our Real-World track challenges you with production engineering scenarios: implementing exponential backoff retries, resolving concurrency races with Mutexes, and safely parsing corrupted JSON webhooks.',
   },
   {
-    q: 'How does the Elo rating system work?',
-    a: 'After each rated contest, your rating changes based on your rank relative to your expected performance. Outperform your expected rank → gain rating. Underperform → lose rating. K-factor is 32 for ratings below 1800, 16 above. Same model used by competitive chess.',
+    q: 'How are contest ratings calculated?',
+    a: 'We implement the standard Elo competitive rating formula with calibrated K-factors (32 for emerging ratings, 16 for masters). Your rating updates live based on your rank relative to the expected performance of other competitors.',
   },
   {
-    q: 'What happens to my coins if I cancel Pro?',
-    a: 'Your coins stay. They are stored in an immutable ledger tied to your account. If you downgrade to free, you can still spend any coins you already earned. You just won\'t earn at the Pro rate anymore.',
+    q: 'Does the AI hint mentor ever give away code solutions?',
+    a: 'No. The AI is prompt-engineered as a senior staff engineer conducting a pair interview. It identifies high-level algorithmic edge cases and logical fallacies without pasting code, preserving the learning curve.',
   },
   {
-    q: 'Can I use KyroCode stats on my portfolio (e.g., Codolio)?',
-    a: 'Yes. We expose a public Codolio-compatible stats API at /api/v1/users/:username/stats. Any portfolio aggregator can pull your KyroCode stats — problems solved by difficulty, rating, streak, and contest history.',
+    q: 'Can I connect my KyroCode stats to third-party developer profiles like Codolio?',
+    a: 'Yes. We provide an open, standardized REST API (/api/v1/users/:username/stats) allowing any developer portfolio aggregator to sync your solved difficulties, streak count, and Elo history.',
   },
   {
-    q: 'Does the AI hint system give away the solution?',
-    a: "Never. The AI is instructed to act as a coding mentor — it identifies what is conceptually wrong with your approach and gives one directional nudge. Maximum 3 sentences. It will not write code for you. After 3 hints per problem, you can purchase 5 more with coins.",
+    q: 'What happens to my earned coins if I cancel a Pro subscription?',
+    a: 'All earned coins remain permanently in your account ledger. You can continue redeeming them for editorials and community unlocks anytime.',
   },
 ];
 
@@ -36,63 +36,21 @@ const FaqItem = ({ item, index }) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.4, delay: index * 0.05 }}
-      style={{
-        borderBottom: '1px solid rgba(255,255,255,0.07)',
-      }}
-    >
+    <div className="border-b border-zinc-800/80 last:border-b-0">
       <button
+        type="button"
         id={`faq-${index}`}
-        onClick={() => setOpen((o) => !o)}
-        style={{
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 16,
-          padding: '20px 0',
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          textAlign: 'left',
-        }}
+        onClick={() => setOpen(!open)}
+        className="w-full py-5 flex items-center justify-between text-left gap-4 group focus:outline-none"
       >
-        <span
-          style={{
-            fontFamily: 'Inter, sans-serif',
-            fontWeight: 600,
-            fontSize: 16,
-            color: open ? '#fff' : 'rgba(255,255,255,0.75)',
-            transition: 'color 0.2s',
-            lineHeight: 1.4,
-          }}
-        >
+        <span className="text-base sm:text-lg font-medium text-zinc-200 group-hover:text-white transition-colors">
           {item.q}
         </span>
-        <motion.div
-          animate={{ rotate: open ? 45 : 0 }}
-          transition={{ duration: 0.25 }}
-          style={{
-            width: 28,
-            height: 28,
-            borderRadius: '50%',
-            background: open ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0,
-            transition: 'background 0.2s',
-          }}
-        >
-          <svg width="14" height="14" fill="none" viewBox="0 0 24 24">
-            <path d="M12 5v14M5 12h14" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" strokeLinecap="round" />
+        <div className={`w-7 h-7 rounded-full border border-zinc-800 flex items-center justify-center shrink-0 transition-transform duration-200 ${open ? 'rotate-45 bg-zinc-800 text-white' : 'bg-zinc-900/60 text-zinc-400 group-hover:text-white'}`}>
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4v16m8-8H4" />
           </svg>
-        </motion.div>
+        </div>
       </button>
 
       <AnimatePresence initial={false}>
@@ -101,85 +59,40 @@ const FaqItem = ({ item, index }) => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-            style={{ overflow: 'hidden' }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden"
           >
-            <p
-              style={{
-                fontFamily: 'Inter, sans-serif',
-                fontSize: 15,
-                lineHeight: 1.7,
-                color: 'rgba(255,255,255,0.45)',
-                paddingBottom: 20,
-              }}
-            >
+            <p className="text-sm sm:text-base text-zinc-400 font-normal leading-relaxed pb-6 pt-1">
               {item.a}
             </p>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 };
 
 const FAQ = () => {
   return (
-    <section id="faq" style={{ padding: '120px 0' }}>
-      <div className="max-w-3xl mx-auto px-4 sm:px-6">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <span
-            style={{
-              display: 'inline-block',
-              fontFamily: 'Inter, sans-serif',
-              fontWeight: 600,
-              fontSize: 12,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: 'rgba(255,255,255,0.4)',
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              padding: '5px 14px',
-              borderRadius: 100,
-              marginBottom: 20,
-            }}
-          >
-            FAQ
-          </span>
-          <h2
-            style={{
-              fontFamily: 'Inter, sans-serif',
-              fontWeight: 800,
-              fontSize: 'clamp(28px, 4vw, 44px)',
-              letterSpacing: '-0.04em',
-              color: '#fff',
-              lineHeight: 1.1,
-              marginBottom: 14,
-            }}
-          >
-            Frequently asked questions
+    <section id="faq" className="w-full py-20 sm:py-28 bg-black flex flex-col items-center border-t border-zinc-900">
+      <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="text-center mb-14 sm:mb-16">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/50 text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-4">
+            Frequently Asked Questions
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-4">
+            Everything you need to know.
           </h2>
-          <p
-            style={{
-              fontFamily: 'Inter, sans-serif',
-              fontSize: 16,
-              color: 'rgba(255,255,255,0.4)',
-            }}
-          >
-            Everything you need to know about KyroCode.
+          <p className="text-base sm:text-lg text-zinc-400 font-normal leading-relaxed">
+            Have questions about Judge0 sandboxing, ratings, or account tiers? Find answers below.
           </p>
-        </motion.div>
+        </div>
 
-        {/* FAQ list */}
-        <div>
-          {FAQS.map((item, i) => (
-            <FaqItem key={i} item={item} index={i} />
+        {/* Accordion List */}
+        <div className="rounded-2xl border border-zinc-800/80 bg-zinc-950/60 p-6 sm:p-8 divide-y divide-zinc-850 shadow-xl">
+          {FAQS.map((item, idx) => (
+            <FaqItem key={idx} item={item} index={idx} />
           ))}
         </div>
       </div>

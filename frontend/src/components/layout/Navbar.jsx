@@ -3,9 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const NAV_LINKS = [
   { label: 'Problems', href: '#problems' },
-  { label: 'Contests', href: '#contests' },
-  { label: 'Leaderboard', href: '#leaderboard' },
+  { label: 'Features', href: '#features' },
   { label: 'Pricing', href: '#pricing' },
+  { label: 'FAQ', href: '#faq' },
 ];
 
 const Navbar = () => {
@@ -19,256 +19,118 @@ const Navbar = () => {
   }, []);
 
   return (
-    <motion.header
-      initial={{ y: -24, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-      className="fixed top-0 inset-x-0 z-50"
-    >
-      {/* Main bar */}
-      <div
-        className="mx-auto max-w-7xl px-4 sm:px-6"
-        style={{ paddingTop: '12px', paddingBottom: '12px' }}
-      >
+    <header className="fixed top-0 inset-x-0 z-50 transition-all duration-300 py-3 sm:py-4 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto flex items-center justify-between">
+        {/* Floating pill container */}
         <div
-          className="flex items-center justify-between rounded-2xl px-5 py-3 transition-all duration-300"
-          style={{
-            background: scrolled
-              ? 'rgba(10,10,10,0.85)'
-              : 'rgba(10,10,10,0.4)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255,255,255,0.06)',
-            boxShadow: scrolled ? '0 8px 32px rgba(0,0,0,0.6)' : 'none',
-          }}
+          className={`w-full flex items-center justify-between rounded-full px-5 py-2.5 transition-all duration-300 border ${
+            scrolled
+              ? 'bg-zinc-950/80 backdrop-blur-xl border-zinc-800 shadow-2xl shadow-black/50'
+              : 'bg-zinc-950/50 backdrop-blur-md border-zinc-800/60'
+          }`}
         >
           {/* Logo */}
           <a
             href="/"
-            className="flex items-center gap-2 select-none"
-            style={{ textDecoration: 'none' }}
+            className="flex items-center gap-2.5 text-decoration-none group select-none"
           >
-            {/* K icon */}
-            <div
-              className="flex items-center justify-center rounded-lg"
-              style={{
-                width: 32,
-                height: 32,
-                background: '#fff',
-                flexShrink: 0,
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: 'Inter, sans-serif',
-                  fontWeight: 900,
-                  fontSize: 18,
-                  color: '#000',
-                  letterSpacing: '-0.05em',
-                  lineHeight: 1,
-                }}
-              >
-                K
-              </span>
+            <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center font-bold text-black text-sm tracking-tight transition-transform group-hover:scale-105 shadow-sm">
+              K
             </div>
-            <span
-              style={{
-                fontFamily: 'Inter, sans-serif',
-                fontWeight: 700,
-                fontSize: 16,
-                color: '#fff',
-                letterSpacing: '-0.02em',
-              }}
-            >
+            <span className="font-semibold text-base text-zinc-100 tracking-tight transition-colors group-hover:text-white">
               KyroCode
             </span>
           </a>
 
-          {/* Desktop nav */}
+          {/* Desktop Nav Links */}
           <nav className="hidden md:flex items-center gap-1">
             {NAV_LINKS.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
-                style={{
-                  fontFamily: 'Inter, sans-serif',
-                  fontWeight: 500,
-                  fontSize: 14,
-                  color: 'rgba(255,255,255,0.6)',
-                  textDecoration: 'none',
-                  padding: '6px 14px',
-                  borderRadius: 8,
-                  transition: 'color 0.2s, background 0.2s',
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.color = '#fff';
-                  e.target.style.background = 'rgba(255,255,255,0.06)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.color = 'rgba(255,255,255,0.6)';
-                  e.target.style.background = 'transparent';
-                }}
+                className="text-sm font-medium text-zinc-400 hover:text-white px-3.5 py-1.5 rounded-full transition-colors hover:bg-white/[0.06]"
               >
                 {link.label}
               </a>
             ))}
           </nav>
 
-          {/* CTA buttons */}
+          {/* CTA & Actions */}
           <div className="hidden md:flex items-center gap-3">
             <a
               href="/login"
-              style={{
-                fontFamily: 'Inter, sans-serif',
-                fontWeight: 500,
-                fontSize: 14,
-                color: 'rgba(255,255,255,0.7)',
-                textDecoration: 'none',
-                padding: '7px 16px',
-                borderRadius: 8,
-                transition: 'color 0.2s',
-              }}
-              onMouseEnter={(e) => (e.target.style.color = '#fff')}
-              onMouseLeave={(e) => (e.target.style.color = 'rgba(255,255,255,0.7)')}
+              className="text-sm font-medium text-zinc-300 hover:text-white px-3.5 py-1.5 transition-colors"
             >
-              Sign in
+              Sign In
             </a>
             <a
               href="/register"
-              style={{
-                fontFamily: 'Inter, sans-serif',
-                fontWeight: 600,
-                fontSize: 14,
-                color: '#000',
-                textDecoration: 'none',
-                padding: '7px 18px',
-                borderRadius: 8,
-                background: '#fff',
-                transition: 'background 0.2s, transform 0.15s',
-                display: 'inline-block',
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.background = '#e5e5e5';
-                e.target.style.transform = 'scale(1.02)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.background = '#fff';
-                e.target.style.transform = 'scale(1)';
-              }}
+              className="text-sm font-medium bg-white text-black hover:bg-zinc-200 px-4 py-1.5 rounded-full transition-all duration-200 hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]"
             >
               Get Started
             </a>
           </div>
 
-          {/* Mobile hamburger */}
+          {/* Mobile hamburger button */}
           <button
-            className="md:hidden flex flex-col gap-1.5 p-2"
-            onClick={() => setMobileOpen((o) => !o)}
-            aria-label="Toggle menu"
-            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+            type="button"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="md:hidden p-1.5 text-zinc-400 hover:text-white focus:outline-none"
+            aria-label="Toggle Navigation"
           >
-            {[0, 1, 2].map((i) => (
-              <span
-                key={i}
-                style={{
-                  display: 'block',
-                  width: 22,
-                  height: 2,
-                  background: '#fff',
-                  borderRadius: 2,
-                  transition: 'transform 0.3s, opacity 0.3s',
-                  transform:
-                    mobileOpen
-                      ? i === 0
-                        ? 'translateY(6px) rotate(45deg)'
-                        : i === 2
-                        ? 'translateY(-6px) rotate(-45deg)'
-                        : 'none'
-                      : 'none',
-                  opacity: mobileOpen && i === 1 ? 0 : 1,
-                }}
-              />
-            ))}
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              {mobileOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
           </button>
         </div>
-
-        {/* Mobile menu */}
-        <AnimatePresence>
-          {mobileOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.2 }}
-              className="md:hidden mt-2 rounded-2xl p-4"
-              style={{
-                background: 'rgba(10,10,10,0.95)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255,255,255,0.08)',
-              }}
-            >
-              {NAV_LINKS.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  style={{
-                    display: 'block',
-                    fontFamily: 'Inter, sans-serif',
-                    fontWeight: 500,
-                    fontSize: 15,
-                    color: 'rgba(255,255,255,0.7)',
-                    textDecoration: 'none',
-                    padding: '10px 12px',
-                    borderRadius: 8,
-                    transition: 'color 0.2s',
-                  }}
-                >
-                  {link.label}
-                </a>
-              ))}
-              <div className="mt-3 pt-3 flex gap-2" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                <a
-                  href="/login"
-                  style={{
-                    flex: 1,
-                    textAlign: 'center',
-                    fontFamily: 'Inter, sans-serif',
-                    fontWeight: 500,
-                    fontSize: 14,
-                    color: '#fff',
-                    textDecoration: 'none',
-                    padding: '9px',
-                    borderRadius: 8,
-                    border: '1px solid rgba(255,255,255,0.12)',
-                  }}
-                >
-                  Sign in
-                </a>
-                <a
-                  href="/register"
-                  style={{
-                    flex: 1,
-                    textAlign: 'center',
-                    fontFamily: 'Inter, sans-serif',
-                    fontWeight: 600,
-                    fontSize: 14,
-                    color: '#000',
-                    textDecoration: 'none',
-                    padding: '9px',
-                    borderRadius: 8,
-                    background: '#fff',
-                  }}
-                >
-                  Get Started
-                </a>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
-    </motion.header>
+
+      {/* Mobile Menu Dropdown */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden max-w-6xl mx-auto mt-2 rounded-2xl bg-zinc-950/95 border border-zinc-800/80 p-4 backdrop-blur-2xl shadow-2xl flex flex-col gap-2"
+          >
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={() => setMobileOpen(false)}
+                className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-2 rounded-lg hover:bg-zinc-900 transition-colors"
+              >
+                {link.label}
+              </a>
+            ))}
+            <div className="pt-2 mt-1 border-t border-zinc-800/80 flex flex-col gap-2">
+              <a
+                href="/login"
+                onClick={() => setMobileOpen(false)}
+                className="text-sm font-medium text-center text-zinc-300 hover:text-white py-2"
+              >
+                Sign In
+              </a>
+              <a
+                href="/register"
+                onClick={() => setMobileOpen(false)}
+                className="text-sm font-medium text-center bg-white text-black hover:bg-zinc-200 py-2 rounded-xl transition-colors font-semibold"
+              >
+                Get Started
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
   );
 };
 
 export default Navbar;
+

@@ -1,268 +1,136 @@
 import { motion } from 'framer-motion';
-import { useRef } from 'react';
 
 const FEATURES = [
   {
+    tag: 'Sandboxing',
+    title: 'Self-Hosted Judge0 Engine',
+    desc: 'Every single line of code executes in an isolated Docker container on bare-metal servers. No third-party API rate limits, no throttled queues.',
+    badge: 'Zero Vendor Lock',
     icon: (
-      <svg width="22" height="22" fill="none" viewBox="0 0 24 24">
-        <rect x="3" y="3" width="18" height="18" rx="4" stroke="currentColor" strokeWidth="1.8" />
-        <path d="M8 12l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
       </svg>
     ),
-    title: 'Self-Hosted Judge',
-    desc: 'We run Judge0 ourselves. No third-party execution APIs. Every submission runs in a real Docker sandbox on our infrastructure — not a vendor call.',
-    tag: 'Execution Engine',
   },
   {
+    tag: 'Live Contests',
+    title: 'Elo Rating & Redis Leaderboards',
+    desc: 'Experience real adrenaline with live sub-second leaderboard updates powered by Redis sorted sets. Elo recalculation runs automatically post-contest.',
+    badge: 'Competitive Tier',
     icon: (
-      <svg width="22" height="22" fill="none" viewBox="0 0 24 24">
-        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
       </svg>
     ),
-    title: 'Real-Time Contests',
-    desc: 'Live Elo-rated contests with ICPC and Codeforces scoring modes. Redis-powered leaderboards update instantly. Your rating history plotted beautifully.',
-    tag: 'Competitive',
   },
   {
-    icon: (
-      <svg width="22" height="22" fill="none" viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
-        <path d="M12 8v4l3 3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      </svg>
-    ),
-    title: 'Real-World Problems',
-    desc: 'A category no other platform has. Mock flaky APIs, dirty data pipelines, race condition scenarios. Test production thinking, not just algorithm recall.',
-    tag: 'Unique',
+    tag: 'Industry First',
+    title: 'Real-World Production Scenarios',
+    desc: 'Tired of inversing binary trees? Solve real challenges: handle idempotency in payment queues, debounce telemetry, and parse malformed webhook feeds.',
+    badge: 'Exclusive',
     highlight: true,
-  },
-  {
     icon: (
-      <svg width="22" height="22" fill="none" viewBox="0 0 24 24">
-        <path d="M9.5 3H5a2 2 0 00-2 2v4.5M9.5 3l5 5M9.5 3v5h5M9.5 8H21m0 0v13H3v-9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
       </svg>
     ),
-    title: 'AI Hint System',
-    desc: 'Stuck? Get a directional hint from an AI mentor that never gives away the answer. Streamed in real-time, gated by coins to keep it intentional.',
-    tag: 'AI',
   },
   {
+    tag: 'Mentorship',
+    title: 'Contextual AI Hints Without Spoilers',
+    desc: 'An AI mentor that inspects your failing test cases and explains logic gaps without blurting the solution. Teaches you how to reason independently.',
+    badge: 'LLM Powered',
     icon: (
-      <svg width="22" height="22" fill="none" viewBox="0 0 24 24">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke="currentColor" strokeWidth="1.8" />
-        <path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
       </svg>
     ),
-    title: 'Streak & Coins Economy',
-    desc: 'Daily streaks, coin rewards for solving problems, and a full audit ledger. Spend coins on hints and editorials. Engagement loops that actually work.',
+  },
+  {
     tag: 'Gamification',
-  },
-  {
+    title: 'Ledger-Backed Streak & Coin Economy',
+    desc: 'Consistency is rewarded. Solve problems daily to earn coins, unlock verified editorials, and track proof of work on your public developer profile.',
+    badge: 'Motivation Loop',
     icon: (
-      <svg width="22" height="22" fill="none" viewBox="0 0 24 24">
-        <rect x="2" y="3" width="20" height="14" rx="2" stroke="currentColor" strokeWidth="1.8" />
-        <path d="M8 21h8M12 17v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     ),
-    title: 'Monaco Code Editor',
-    desc: 'The same editor powering VS Code. Syntax highlighting, autocomplete, multi-language support. Auto-saves your code per problem per language.',
-    tag: 'Editor',
+  },
+  {
+    tag: 'IDE Experience',
+    title: 'Monaco Editor with Per-Language Autosave',
+    desc: 'The exact editor engine powering VS Code with vim bindings, full intellisense, customized dark themes, and instant multi-language switching.',
+    badge: 'VS Code Core',
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+      </svg>
+    ),
   },
 ];
 
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
-  },
-};
-
-const FeatureCard = ({ feature }) => {
-  const ref = useRef(null);
-
-  const handleMouseMove = (e) => {
-    const el = ref.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    el.style.setProperty('--mx', `${x}px`);
-    el.style.setProperty('--my', `${y}px`);
-  };
-
-  return (
-    <motion.div
-      ref={ref}
-      variants={cardVariants}
-      onMouseMove={handleMouseMove}
-      className="group relative rounded-2xl p-6 cursor-default"
-      style={{
-        background: feature.highlight
-          ? 'rgba(255,255,255,0.05)'
-          : 'rgba(255,255,255,0.025)',
-        border: feature.highlight
-          ? '1px solid rgba(255,255,255,0.15)'
-          : '1px solid rgba(255,255,255,0.06)',
-        transition: 'border-color 0.3s, background 0.3s',
-        overflow: 'hidden',
-      }}
-      whileHover={{ y: -2 }}
-      transition={{ duration: 0.2 }}
-    >
-      {/* Spotlight effect */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100"
-        style={{
-          background: `radial-gradient(280px circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.04), transparent 70%)`,
-          transition: 'opacity 0.3s',
-        }}
-      />
-
-      {/* Top row */}
-      <div className="flex items-start justify-between mb-4">
-        <div
-          className="flex items-center justify-center rounded-xl"
-          style={{
-            width: 44,
-            height: 44,
-            background: 'rgba(255,255,255,0.06)',
-            border: '1px solid rgba(255,255,255,0.08)',
-            color: 'rgba(255,255,255,0.8)',
-            flexShrink: 0,
-          }}
-        >
-          {feature.icon}
-        </div>
-        <span
-          style={{
-            fontFamily: 'Inter, sans-serif',
-            fontSize: 11,
-            fontWeight: 600,
-            color: 'rgba(255,255,255,0.4)',
-            letterSpacing: '0.06em',
-            textTransform: 'uppercase',
-            background: 'rgba(255,255,255,0.05)',
-            padding: '3px 10px',
-            borderRadius: 100,
-            border: '1px solid rgba(255,255,255,0.06)',
-          }}
-        >
-          {feature.tag}
-        </span>
-      </div>
-
-      {/* Title */}
-      <h3
-        style={{
-          fontFamily: 'Inter, sans-serif',
-          fontWeight: 700,
-          fontSize: 17,
-          color: '#fff',
-          letterSpacing: '-0.02em',
-          marginBottom: 10,
-        }}
-      >
-        {feature.title}
-      </h3>
-
-      {/* Desc */}
-      <p
-        style={{
-          fontFamily: 'Inter, sans-serif',
-          fontWeight: 400,
-          fontSize: 14,
-          lineHeight: 1.65,
-          color: 'rgba(255,255,255,0.45)',
-        }}
-      >
-        {feature.desc}
-      </p>
-    </motion.div>
-  );
-};
-
 const Features = () => {
   return (
-    <section id="features" style={{ padding: '120px 0' }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center mb-16"
-        >
-          <span
-            style={{
-              display: 'inline-block',
-              fontFamily: 'Inter, sans-serif',
-              fontWeight: 600,
-              fontSize: 12,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: 'rgba(255,255,255,0.4)',
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              padding: '5px 14px',
-              borderRadius: 100,
-              marginBottom: 20,
-            }}
-          >
-            Features
-          </span>
-          <h2
-            style={{
-              fontFamily: 'Inter, sans-serif',
-              fontWeight: 800,
-              fontSize: 'clamp(32px, 5vw, 52px)',
-              letterSpacing: '-0.04em',
-              color: '#fff',
-              lineHeight: 1.1,
-              marginBottom: 16,
-            }}
-          >
-            Everything serious
-            <br />
-            programmers need
+    <section id="features" className="w-full py-20 sm:py-28 bg-black flex flex-col items-center">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-20">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/50 text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-4">
+            Platform Capabilities
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-4">
+            Engineered for developers who take code seriously.
           </h2>
-          <p
-            style={{
-              fontFamily: 'Inter, sans-serif',
-              fontWeight: 400,
-              fontSize: 17,
-              color: 'rgba(255,255,255,0.45)',
-              maxWidth: 520,
-              margin: '0 auto',
-              lineHeight: 1.6,
-            }}
-          >
-            Built from the ground up for competitive programming — not bolted on as an afterthought.
+          <p className="text-base sm:text-lg text-zinc-400 font-normal leading-relaxed">
+            Every feature is architected from scratch for high performance, accuracy, and true engineering growth.
           </p>
-        </motion.div>
+        </div>
 
-        {/* Grid */}
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-60px' }}
-        >
-          {FEATURES.map((feature) => (
-            <FeatureCard key={feature.title} feature={feature} />
+        {/* Feature Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {FEATURES.map((feature, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.4, delay: idx * 0.05 }}
+              className={`group relative rounded-2xl p-6 sm:p-7 transition-all duration-300 border flex flex-col justify-between ${
+                feature.highlight
+                  ? 'bg-zinc-900/40 border-zinc-700 hover:border-zinc-500 shadow-[0_0_30px_rgba(255,255,255,0.05)]'
+                  : 'bg-zinc-950/60 border-zinc-800/80 hover:border-zinc-700 hover:bg-zinc-900/20'
+              }`}
+            >
+              <div>
+                {/* Top header row */}
+                <div className="flex items-center justify-between mb-5">
+                  <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-200 group-hover:text-white group-hover:border-zinc-700 transition-colors">
+                    {feature.icon}
+                  </div>
+                  <span className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-zinc-900/70 border border-zinc-800/80">
+                    {feature.tag}
+                  </span>
+                </div>
+
+                {/* Title */}
+                <h3 className="text-lg font-bold text-white tracking-tight mb-2.5 group-hover:text-zinc-100 transition-colors">
+                  {feature.title}
+                </h3>
+
+                {/* Description */}
+                <p className="text-sm text-zinc-400 leading-relaxed font-normal">
+                  {feature.desc}
+                </p>
+              </div>
+
+              {/* Bottom tag */}
+              <div className="mt-6 pt-4 border-t border-zinc-900/80 flex items-center text-xs font-medium text-zinc-500 group-hover:text-zinc-400 transition-colors">
+                <span>{feature.badge}</span>
+              </div>
+            </motion.div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

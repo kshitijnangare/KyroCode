@@ -2,233 +2,71 @@ import { motion } from 'framer-motion';
 
 const CTA = () => {
   return (
-    <section
-      id="cta"
-      style={{
-        padding: '120px 0',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-    >
-      {/* Top border line */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '80%',
-          maxWidth: 800,
-          height: 1,
-          background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.12) 60%, transparent)',
-        }}
-      />
+    <section id="cta" className="w-full py-24 sm:py-32 bg-black flex flex-col items-center border-t border-zinc-900 relative overflow-hidden">
+      {/* Background radial glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-80 pointer-events-none opacity-20">
+        <div className="w-full h-full bg-[radial-gradient(circle,rgba(255,255,255,0.15),transparent_70%)] blur-2xl" />
+      </div>
 
-      {/* Radial glow behind content */}
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 600,
-          height: 600,
-          background: 'radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 65%)',
-          filter: 'blur(40px)',
-        }}
-      />
+      <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        {/* Tag badge */}
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/60 text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-6">
+          <span className="w-2 h-2 rounded-full bg-emerald-400" />
+          <span>Zero Cost To Start</span>
+        </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
-        {/* Tag */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          style={{ marginBottom: 28 }}
-        >
-          <span
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 6,
-              fontFamily: 'Inter, sans-serif',
-              fontWeight: 600,
-              fontSize: 12,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: 'rgba(255,255,255,0.4)',
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              padding: '5px 14px',
-              borderRadius: 100,
-            }}
-          >
-            <span
-              style={{
-                width: 6,
-                height: 6,
-                borderRadius: '50%',
-                background: '#22c55e',
-                boxShadow: '0 0 8px #22c55e',
-                display: 'inline-block',
-              }}
-            />
-            Free to start · No credit card
-          </span>
-        </motion.div>
+        {/* Title */}
+        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight mb-6">
+          Ready to test your true engineering limits?
+        </h2>
 
-        {/* Headline */}
-        <motion.h2
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          style={{
-            fontFamily: 'Inter, sans-serif',
-            fontWeight: 900,
-            fontSize: 'clamp(36px, 6vw, 72px)',
-            letterSpacing: '-0.05em',
-            color: '#fff',
-            lineHeight: 1.05,
-            marginBottom: 20,
-          }}
-        >
-          Ready to
-          <br />
-          <span style={{ color: 'rgba(255,255,255,0.4)' }}>level up?</span>
-        </motion.h2>
+        {/* Subtitle */}
+        <p className="text-base sm:text-lg text-zinc-400 font-normal leading-relaxed max-w-xl mx-auto mb-10 text-balance">
+          Join 180,000+ engineers solving DSA problems, production engineering scenarios, and climbing Elo leaderboards.
+        </p>
 
-        {/* Sub-headline */}
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          style={{
-            fontFamily: 'Inter, sans-serif',
-            fontWeight: 400,
-            fontSize: 18,
-            color: 'rgba(255,255,255,0.4)',
-            lineHeight: 1.6,
-            maxWidth: 480,
-            margin: '0 auto 40px',
-          }}
-        >
-          Join 180,000+ engineers already grinding on KyroCode.
-          Your first 500 problems are free.
-        </motion.p>
-
-        {/* Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}
-        >
+        {/* Call to action buttons */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 mb-10">
           <a
             href="/register"
             id="cta-primary"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 8,
-              background: '#fff',
-              color: '#000',
-              fontFamily: 'Inter, sans-serif',
-              fontWeight: 700,
-              fontSize: 16,
-              padding: '15px 32px',
-              borderRadius: 12,
-              textDecoration: 'none',
-              transition: 'background 0.2s, transform 0.15s',
-              boxShadow: '0 0 40px rgba(255,255,255,0.08)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#e5e5e5';
-              e.currentTarget.style.transform = 'translateY(-2px)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = '#fff';
-              e.currentTarget.style.transform = 'translateY(0)';
-            }}
+            className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-white text-black font-semibold text-sm hover:bg-zinc-200 transition-all flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(255,255,255,0.2)]"
           >
-            Start Coding Free
-            <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-              <path d="M5 12h14M12 5l7 7-7 7" />
+            <span>Start Solving Free</span>
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
           </a>
           <a
             href="/problems"
             id="cta-secondary"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 8,
-              background: 'transparent',
-              color: 'rgba(255,255,255,0.65)',
-              fontFamily: 'Inter, sans-serif',
-              fontWeight: 600,
-              fontSize: 16,
-              padding: '15px 28px',
-              borderRadius: 12,
-              textDecoration: 'none',
-              border: '1px solid rgba(255,255,255,0.12)',
-              transition: 'color 0.2s, border-color 0.2s, transform 0.15s',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = '#fff';
-              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)';
-              e.currentTarget.style.transform = 'translateY(-2px)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = 'rgba(255,255,255,0.65)';
-              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)';
-              e.currentTarget.style.transform = 'translateY(0)';
-            }}
+            className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-zinc-900/80 text-zinc-300 hover:text-white border border-zinc-800 hover:border-zinc-700 text-sm font-medium transition-all"
           >
-            Browse Problems
+            Explore Problem Catalog
           </a>
-        </motion.div>
+        </div>
 
-        {/* Trust row */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-          style={{
-            marginTop: 48,
-            display: 'flex',
-            justifyContent: 'center',
-            gap: 32,
-            flexWrap: 'wrap',
-          }}
-        >
-          {[
-            'No credit card required',
-            '2,400+ problems',
-            'Real execution engine',
-          ].map((item) => (
-            <span
-              key={item}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-                fontFamily: 'Inter, sans-serif',
-                fontSize: 13,
-                color: 'rgba(255,255,255,0.3)',
-              }}
-            >
-              <svg width="14" height="14" fill="none" viewBox="0 0 24 24">
-                <path d="M5 12l5 5L20 7" stroke="rgba(255,255,255,0.3)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              {item}
-            </span>
-          ))}
-        </motion.div>
+        {/* Trust bullet points */}
+        <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-zinc-500 font-medium">
+          <div className="flex items-center gap-1.5">
+            <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>No credit card required</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>Instant Docker execution</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>Public portfolio API</span>
+          </div>
+        </div>
       </div>
     </section>
   );

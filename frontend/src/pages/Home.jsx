@@ -10,9 +10,9 @@ import CTA from '../components/home/CTA';
 
 const Home = () => {
     return (
-        <div >
+        <div className="min-h-screen w-full flex flex-col bg-black text-white selection:bg-white/20">
             <Navbar />
-            <main>
+            <main className="w-full flex-1 flex flex-col">
                 <Hero />
                 <Companies />
                 <Features />

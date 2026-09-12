@@ -4,440 +4,184 @@ import { motion } from 'framer-motion';
 const PLANS = [
   {
     id: 'free',
-    name: 'Free',
-    desc: 'For individual coders starting their journey',
+    name: 'Community',
+    desc: 'For aspiring engineers building fundamental algorithmic discipline.',
     monthlyPrice: 0,
     yearlyPrice: 0,
     cta: 'Get Started Free',
     ctaHref: '/register',
     highlighted: false,
-    icon: (
-      <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
-        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
-    features: {
-      overview: ['Access to 500+ problems', 'Practice mode submissions', '3 languages supported'],
-      highlights: [
-        { label: 'Sample test cases only', included: true },
-        { label: 'Public profile & heatmap', included: true },
-        { label: 'Participate in contests', included: true },
-        { label: 'AI hint system', included: false },
-        { label: 'Editorials & solutions', included: false },
-        { label: 'Real-World Problems', included: false },
-      ],
-    },
+    features: [
+      '500+ curated DSA problems',
+      'Judge0 Docker sandboxed execution',
+      'Public profile & GitHub-style heatmap',
+      'Weekly rated contests & ICPC scoreboard',
+      'Standard language support (C++, Python, Java)',
+    ],
+    limitations: [
+      'Real-world system challenge scenarios',
+      'Deep AI hint mentorship',
+      'Complete editorial breakdowns',
+    ],
   },
   {
     id: 'pro',
-    name: 'Pro',
-    desc: 'For serious coders who want every edge',
-    monthlyPrice: 8,
-    yearlyPrice: 6,
-    cta: 'Start Pro',
+    name: 'Pro Engineer',
+    desc: 'For serious developers aiming for top-tier tech and contest mastery.',
+    monthlyPrice: 9,
+    yearlyPrice: 7,
+    cta: 'Upgrade to Pro',
     ctaHref: '/register?plan=pro',
     highlighted: true,
     badge: 'Most Popular',
-    icon: (
-      <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
-        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
-    features: {
-      overview: ['All 2,400+ problems', 'All languages incl. Go, Rust', 'Unlimited submissions'],
-      highlights: [
-        { label: 'All hidden test cases visible', included: true },
-        { label: 'AI hint system (unlimited)', included: true },
-        { label: 'Full editorial access', included: true },
-        { label: 'Real-World Problems category', included: true },
-        { label: 'Priority contest queue', included: true },
-        { label: 'Custom profile badge', included: true },
-      ],
-    },
+    features: [
+      'Complete 2,400+ problem library',
+      'Real-world production engineering track',
+      'Contextual AI hints without spoilers',
+      'All hidden test cases & stress datasets',
+      'Full verified editorial solutions',
+      'Priority execution queue during contests',
+      'Codolio-compatible portfolio stats sync',
+    ],
+    limitations: [],
   },
 ];
 
-const CheckIcon = ({ included }) => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-    {included ? (
-      <>
-        <circle cx="8" cy="8" r="7" fill="rgba(255,255,255,0.08)" />
-        <path d="M5 8l2.5 2.5L11 5" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-      </>
-    ) : (
-      <>
-        <circle cx="8" cy="8" r="7" fill="rgba(255,255,255,0.03)" />
-        <path d="M6 6l4 4M10 6l-4 4" stroke="rgba(255,255,255,0.2)" strokeWidth="1.8" strokeLinecap="round" />
-      </>
-    )}
-  </svg>
-);
-
-const PlanCard = ({ plan, isYearly }) => {
-  const price = isYearly ? plan.yearlyPrice : plan.monthlyPrice;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      style={{
-        position: 'relative',
-        background: plan.highlighted ? 'rgba(255,255,255,0.07)' : 'rgba(255,255,255,0.025)',
-        border: plan.highlighted
-          ? '1px solid rgba(255,255,255,0.2)'
-          : '1px solid rgba(255,255,255,0.07)',
-        borderRadius: 20,
-        padding: '32px',
-        flex: 1,
-        maxWidth: 400,
-      }}
-    >
-      {/* Recommended badge */}
-      {plan.badge && (
-        <div
-          style={{
-            position: 'absolute',
-            top: -14,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            background: '#fff',
-            color: '#000',
-            fontFamily: 'Inter, sans-serif',
-            fontWeight: 700,
-            fontSize: 11,
-            letterSpacing: '0.04em',
-            padding: '4px 14px',
-            borderRadius: 100,
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {plan.badge}
-        </div>
-      )}
-
-      {/* Icon */}
-      <div
-        style={{
-          width: 48,
-          height: 48,
-          borderRadius: 12,
-          background: 'rgba(255,255,255,0.06)',
-          border: '1px solid rgba(255,255,255,0.08)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'rgba(255,255,255,0.8)',
-          marginBottom: 20,
-        }}
-      >
-        {plan.icon}
-      </div>
-
-      {/* Name */}
-      <h3
-        style={{
-          fontFamily: 'Inter, sans-serif',
-          fontWeight: 800,
-          fontSize: 24,
-          color: '#fff',
-          letterSpacing: '-0.03em',
-          marginBottom: 6,
-        }}
-      >
-        {plan.name}
-      </h3>
-
-      {/* Desc */}
-      <p
-        style={{
-          fontFamily: 'Inter, sans-serif',
-          fontSize: 14,
-          color: 'rgba(255,255,255,0.4)',
-          marginBottom: 24,
-          lineHeight: 1.5,
-        }}
-      >
-        {plan.desc}
-      </p>
-
-      {/* Price */}
-      <div style={{ marginBottom: 24 }}>
-        <span
-          style={{
-            fontFamily: 'Inter, sans-serif',
-            fontWeight: 900,
-            fontSize: 48,
-            color: '#fff',
-            letterSpacing: '-0.04em',
-            lineHeight: 1,
-          }}
-        >
-          {price === 0 ? 'Free' : `$${price}`}
-        </span>
-        {price > 0 && (
-          <span
-            style={{
-              fontFamily: 'Inter, sans-serif',
-              fontSize: 15,
-              color: 'rgba(255,255,255,0.4)',
-              marginLeft: 4,
-            }}
-          >
-            / month
-          </span>
-        )}
-        {isYearly && price > 0 && (
-          <div
-            style={{
-              fontFamily: 'Inter, sans-serif',
-              fontSize: 12,
-              color: 'rgba(255,255,255,0.4)',
-              marginTop: 4,
-            }}
-          >
-            billed annually · save 25%
-          </div>
-        )}
-      </div>
-
-      {/* CTA Button */}
-      <a
-        href={plan.ctaHref}
-        id={`pricing-cta-${plan.id}`}
-        style={{
-          display: 'block',
-          textAlign: 'center',
-          fontFamily: 'Inter, sans-serif',
-          fontWeight: 700,
-          fontSize: 15,
-          color: plan.highlighted ? '#000' : '#fff',
-          background: plan.highlighted ? '#fff' : 'transparent',
-          border: plan.highlighted ? 'none' : '1px solid rgba(255,255,255,0.15)',
-          padding: '13px 24px',
-          borderRadius: 10,
-          textDecoration: 'none',
-          marginBottom: 28,
-          transition: 'background 0.2s, transform 0.15s',
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = plan.highlighted ? '#e5e5e5' : 'rgba(255,255,255,0.06)';
-          e.currentTarget.style.transform = 'translateY(-1px)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = plan.highlighted ? '#fff' : 'transparent';
-          e.currentTarget.style.transform = 'translateY(0)';
-        }}
-      >
-        {plan.cta}
-      </a>
-
-      {/* Divider */}
-      <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)', paddingTop: 24 }}>
-        {/* Overview */}
-        <p
-          style={{
-            fontFamily: 'Inter, sans-serif',
-            fontWeight: 700,
-            fontSize: 12,
-            color: 'rgba(255,255,255,0.5)',
-            letterSpacing: '0.05em',
-            textTransform: 'uppercase',
-            marginBottom: 12,
-          }}
-        >
-          Overview
-        </p>
-        {plan.features.overview.map((f) => (
-          <div
-            key={f}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              marginBottom: 8,
-              fontFamily: 'Inter, sans-serif',
-              fontSize: 13,
-              color: 'rgba(255,255,255,0.6)',
-            }}
-          >
-            <CheckIcon included={true} />
-            {f}
-          </div>
-        ))}
-
-        {/* Highlights */}
-        <p
-          style={{
-            fontFamily: 'Inter, sans-serif',
-            fontWeight: 700,
-            fontSize: 12,
-            color: 'rgba(255,255,255,0.5)',
-            letterSpacing: '0.05em',
-            textTransform: 'uppercase',
-            marginTop: 20,
-            marginBottom: 12,
-          }}
-        >
-          Highlights
-        </p>
-        {plan.features.highlights.map((f) => (
-          <div
-            key={f.label}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              marginBottom: 8,
-              fontFamily: 'Inter, sans-serif',
-              fontSize: 13,
-              color: f.included ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.25)',
-              textDecoration: f.included ? 'none' : 'line-through',
-            }}
-          >
-            <CheckIcon included={f.included} />
-            {f.label}
-          </div>
-        ))}
-      </div>
-    </motion.div>
-  );
-};
-
 const Pricing = () => {
-  const [isYearly, setIsYearly] = useState(false);
+  const [isYearly, setIsYearly] = useState(true);
 
   return (
-    <section id="pricing" style={{ padding: '120px 0' }}>
-      <div className="max-w-5xl mx-auto px-4 sm:px-6">
+    <section id="pricing" className="w-full py-20 sm:py-28 bg-black flex flex-col items-center border-t border-zinc-900">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <span
-            style={{
-              display: 'inline-block',
-              fontFamily: 'Inter, sans-serif',
-              fontWeight: 600,
-              fontSize: 12,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: 'rgba(255,255,255,0.4)',
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              padding: '5px 14px',
-              borderRadius: 100,
-              marginBottom: 20,
-            }}
-          >
-            Pricing
-          </span>
-          <h2
-            style={{
-              fontFamily: 'Inter, sans-serif',
-              fontWeight: 800,
-              fontSize: 'clamp(30px, 5vw, 50px)',
-              letterSpacing: '-0.04em',
-              color: '#fff',
-              lineHeight: 1.1,
-              marginBottom: 14,
-            }}
-          >
-            Simple, transparent pricing
+        <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/50 text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-4">
+            Transparent Pricing
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-4">
+            Invest in real engineering skill.
           </h2>
-          <p
-            style={{
-              fontFamily: 'Inter, sans-serif',
-              fontSize: 16,
-              color: 'rgba(255,255,255,0.4)',
-              marginBottom: 32,
-            }}
-          >
-            Switch between monthly and yearly billing anytime.
+          <p className="text-base sm:text-lg text-zinc-400 font-normal leading-relaxed mb-8">
+            No surprise tier limits. Start completely free and scale when you need the full arsenal.
           </p>
 
-          {/* Toggle */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
-            <span
-              style={{
-                fontFamily: 'Inter, sans-serif',
-                fontSize: 14,
-                color: !isYearly ? '#fff' : 'rgba(255,255,255,0.4)',
-                fontWeight: !isYearly ? 600 : 400,
-              }}
-            >
-              Monthly
-            </span>
+          {/* Billing Switcher Toggle */}
+          <div className="inline-flex items-center gap-3 p-1 rounded-full bg-zinc-950 border border-zinc-800">
             <button
-              id="pricing-toggle"
-              onClick={() => setIsYearly((v) => !v)}
-              aria-label="Toggle billing period"
-              style={{
-                width: 44,
-                height: 24,
-                borderRadius: 12,
-                background: isYearly ? '#fff' : 'rgba(255,255,255,0.12)',
-                border: 'none',
-                cursor: 'pointer',
-                position: 'relative',
-                transition: 'background 0.3s',
-                flexShrink: 0,
-              }}
+              type="button"
+              onClick={() => setIsYearly(false)}
+              className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
+                !isYearly
+                  ? 'bg-zinc-800 text-white shadow-sm'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
             >
-              <motion.div
-                animate={{ x: isYearly ? 20 : 2 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                style={{
-                  position: 'absolute',
-                  top: 2,
-                  width: 20,
-                  height: 20,
-                  borderRadius: '50%',
-                  background: isYearly ? '#000' : '#fff',
-                }}
-              />
+              Monthly Billing
             </button>
-            <span
-              style={{
-                fontFamily: 'Inter, sans-serif',
-                fontSize: 14,
-                color: isYearly ? '#fff' : 'rgba(255,255,255,0.4)',
-                fontWeight: isYearly ? 600 : 400,
-              }}
+            <button
+              type="button"
+              onClick={() => setIsYearly(true)}
+              className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 ${
+                isYearly
+                  ? 'bg-white text-black font-semibold shadow-sm'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
             >
-              Yearly
-            </span>
-            {isYearly && (
-              <motion.span
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                style={{
-                  fontFamily: 'Inter, sans-serif',
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: '#22c55e',
-                  background: 'rgba(34,197,94,0.12)',
-                  border: '1px solid rgba(34,197,94,0.2)',
-                  padding: '2px 8px',
-                  borderRadius: 100,
-                }}
-              >
+              <span>Annual Billing</span>
+              <span className="px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 text-[10px] font-bold">
                 Save 25%
-              </motion.span>
-            )}
+              </span>
+            </button>
           </div>
-        </motion.div>
+        </div>
 
-        {/* Cards */}
-        <div className="flex flex-col md:flex-row gap-6 justify-center items-stretch">
-          {PLANS.map((plan) => (
-            <PlanCard key={plan.id} plan={plan} isYearly={isYearly} />
-          ))}
+        {/* Pricing Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
+          {PLANS.map((plan) => {
+            const price = isYearly ? plan.yearlyPrice : plan.monthlyPrice;
+
+            return (
+              <motion.div
+                key={plan.id}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.4 }}
+                className={`relative rounded-2xl p-7 sm:p-8 flex flex-col justify-between transition-all duration-300 border ${
+                  plan.highlighted
+                    ? 'bg-zinc-950 border-zinc-700 shadow-2xl shadow-black/80 hover:border-zinc-500'
+                    : 'bg-zinc-950/60 border-zinc-800/80 hover:border-zinc-700'
+                }`}
+              >
+                {/* Popular Pill Badge */}
+                {plan.badge && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-white text-black text-[11px] font-bold tracking-wide uppercase shadow-md">
+                    {plan.badge}
+                  </div>
+                )}
+
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-xl font-bold text-white tracking-tight">
+                      {plan.name}
+                    </h3>
+                  </div>
+
+                  <p className="text-sm text-zinc-400 font-normal leading-relaxed mb-6 min-h-[40px]">
+                    {plan.desc}
+                  </p>
+
+                  {/* Price display */}
+                  <div className="flex items-baseline gap-1.5 mb-8">
+                    <span className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+                      {price === 0 ? '$0' : `$${price}`}
+                    </span>
+                    <span className="text-sm text-zinc-500 font-normal">
+                      / month {isYearly && price > 0 ? '(billed annually)' : ''}
+                    </span>
+                  </div>
+
+                  {/* CTA button */}
+                  <a
+                    href={plan.ctaHref}
+                    id={`pricing-cta-${plan.id}`}
+                    className={`w-full py-3 rounded-xl text-center text-sm font-semibold transition-all duration-200 block mb-8 ${
+                      plan.highlighted
+                        ? 'bg-white text-black hover:bg-zinc-200 shadow-lg shadow-white/10'
+                        : 'bg-zinc-900 text-white hover:bg-zinc-800 border border-zinc-800'
+                    }`}
+                  >
+                    {plan.cta}
+                  </a>
+
+                  {/* Included features */}
+                  <div className="space-y-3 pt-6 border-t border-zinc-900">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                      What's included:
+                    </p>
+                    {plan.features.map((feat, i) => (
+                      <div key={i} className="flex items-center gap-3 text-sm text-zinc-300">
+                        <svg className="w-4 h-4 text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>{feat}</span>
+                      </div>
+                    ))}
+
+                    {/* Excluded features if any */}
+                    {plan.limitations.map((limit, i) => (
+                      <div key={i} className="flex items-center gap-3 text-sm text-zinc-600 line-through">
+                        <svg className="w-4 h-4 text-zinc-700 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        <span>{limit}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
