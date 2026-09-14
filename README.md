@@ -166,7 +166,6 @@ npm run dev
 - ```POST /api/submissions``` - Push code to BullMQ for execution.
 - ```POST /api/submissions/run``` - Run against sample test cases only.
 - ```GET /api/submissions/:id``` - Poll/retrieve execution results.
-
 ### Contests
 - ```GET /api/contests/:slug``` - Fetch contest details.
 - ```GET /api/contests/:id/leaderboard``` - Fetch real-time Redis leaderboard.
