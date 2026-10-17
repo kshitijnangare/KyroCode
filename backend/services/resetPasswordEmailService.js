@@ -1,4 +1,4 @@
-import resend from "../config/resend";
+import resend from "../config/resend.js";
 import dotenv from 'dotenv';
 
 dotenv.config();
