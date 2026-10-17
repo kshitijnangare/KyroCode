@@ -1,4 +1,4 @@
-import { sequelize } from "../config/postgreSQL.js";
+import { sequelize } from "../../config/postgreSQL.js";
 import { DataTypes } from "sequelize";
 
 const SheetProblem = sequelize.define(

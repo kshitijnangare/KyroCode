@@ -129,10 +129,10 @@ User.belongsToMany(User, { through: UserFollows, foreignKey: 'following_id', oth
     ■ CONTESTS associations
 ═══════════════════════════════════════════════ */
 
-Contest.hasMany(ContestContributor, { foreignKey: 'contest_id', as: 'contributors', });
+Contest.hasMany(ContestContributor, { foreignKey: 'contest_id', as: 'contestContributors', });
 ContestContributor.belongsTo(Contest, { foreignKey: 'contest_id', as: 'contest', });
 
-Contest.hasMany(ContestParticipant, { foreignKey: 'contest_id', as: 'participants', });
+Contest.hasMany(ContestParticipant, { foreignKey: 'contest_id', as: 'contestParticipants', });
 ContestParticipant.belongsTo(Contest, { foreignKey: 'contest_id', as: 'contest', });
 
 Contest.hasMany(ContestProblem, { foreignKey: 'contest_id', as: 'contestProblems', });
@@ -153,7 +153,7 @@ Problem.belongsToMany(Contest, { through: ContestProblem, foreignKey: 'problem_i
 
 /* ----- 1 : M Associations ----- */
 
-Problem.hasMany(ContestProblem, { foreignKey: 'problem_id', as: 'contests', });
+Problem.hasMany(ContestProblem, { foreignKey: 'problem_id', as: 'contestProblems', });
 ContestProblem.belongsTo(Problem, { foreignKey: 'problem_id', as: 'problem', });
 
 Problem.hasMany(Submission, { foreignKey: 'problem_id', as: 'submissions', onDelete: 'CASCADE', });
@@ -171,7 +171,7 @@ ProblemCompanyTag.belongsTo(Problem, { foreignKey: 'problem_id', as: 'problem', 
 Problem.hasMany(ProblemTopicTag, { foreignKey: 'problem_id', as: 'topicTags', });
 ProblemTopicTag.belongsTo(Problem, { foreignKey: 'problem_id', as: 'problem', });
 
-Problem.hasMany(UserSolvedProblem, { foreignKey: 'problem_id', as: 'solvedByUsers', onDelete: 'CASCADE', });
+Problem.hasMany(UserSolvedProblem, { foreignKey: 'problem_id', as: 'userSolvedProblems', onDelete: 'CASCADE', });
 UserSolvedProblem.belongsTo(Problem, { foreignKey: 'problem_id', as: 'problem', onDelete: 'CASCADE', });
 
 Problem.hasMany(DailyProblem, { foreignKey: 'problem_id', as: 'dailyProblems', });
@@ -179,7 +179,7 @@ DailyProblem.belongsTo(Problem, { foreignKey: 'problem_id', as: 'problem', });
 
 /* ----- M : N Associations ----- */
 
-Problem.belongsToMany(Sheet, { through: SheetProblem, foreignKey: 'problem_id', otherKey: 'sheet_id', as: 'sheets', });
+Problem.belongsToMany(Sheet, { through: SheetProblem, foreignKey: 'problem_id', otherKey: 'sheet_id', as: 'sheetProblems', });
 Sheet.belongsToMany(Problem, {through: SheetProblem, foreignKey: 'sheet_id', otherKey: 'problem_id', as: 'problems', });
 
 /* ═══════════════════════════════════════════════

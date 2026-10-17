@@ -1,12 +1,12 @@
-import models from "../../models/postgreSQL/associations";
-import { sequelize } from "../../models/postgreSQL/associations";
-import { registrationValidation, loginValidation, resetPasswordValidation } from "../../utils/validators";
-import { hashPassword, verifyPassword } from "../../utils/hashUtils";
+import models from "../../models/postgreSQL/associations/index.js";
+import { sequelize } from "../../models/postgreSQL/associations/index.js";
+import { registrationValidation, loginValidation, resetPasswordValidation } from "../../utils/validators.js";
+import { hashPassword, verifyPassword } from "../../utils/hashUtils.js";
 import { DATE, NOW, Op, where } from "sequelize";
-import { generateAccessToken, verifyAccessToken, generateRefreshToken, verifyRefreshToken, hashToken } from "../../utils/tokenUtils";
-import { storeRefreshToken, getRefreshToken, deleteRefreshToken, revokeAllUserTokens, hasRefreshToken, getEmailVerificationToken, deleteEmailVerificationToken, storeEmailVerificationToken, getResendEmailCooldown, storeResetPasswordToken, getResetPasswordToken, deleteResetPasswordToken } from "../../utils/redisUtils";
-import { sendVerificationEmail } from "../../services/verificationEmailService";
-import { sendResetPasswordEmail } from "../../services/resetPasswordEmailService";
+import { generateAccessToken, verifyAccessToken, generateRefreshToken, verifyRefreshToken, hashToken } from "../../utils/tokenUtils.js";
+import { storeRefreshToken, getRefreshToken, deleteRefreshToken, revokeAllUserTokens, hasRefreshToken, getEmailVerificationToken, deleteEmailVerificationToken, storeEmailVerificationToken, getResendEmailCooldown, storeResetPasswordToken, getResetPasswordToken, deleteResetPasswordToken } from "../../utils/redisUtils.js";
+import { sendVerificationEmail } from "../../services/verificationEmailService.js";
+import { sendResetPasswordEmail } from "../../services/resetPasswordEmailService.js";
 
 const { User } = models;
 
